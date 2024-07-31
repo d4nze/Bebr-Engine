@@ -1,4 +1,2 @@
-﻿Bebr.Window.lib(API.obj) : error LNK2019: ссылка на неразрешенный внешний символ _glfwInit в функции "public: static bool __cdecl Bebr::Window::API::initialize(void)" (?initialize@API@Window@Bebr@@SA_NXZ).
-Bebr.Window.lib(API.obj) : error LNK2019: ссылка на неразрешенный внешний символ _glfwTerminate в функции "public: static void __cdecl Bebr::Window::API::terminate(void)" (?terminate@API@Window@Bebr@@SAXXZ).
-Bebr.Window.lib(API.obj) : error LNK2019: ссылка на неразрешенный внешний символ _glfwSetTime в функции "public: static bool __cdecl Bebr::Window::API::initialize(void)" (?initialize@API@Window@Bebr@@SA_NXZ).
-..\Build\bin\Debug-Win32\Run\Run.exe : fatal error LNK1120: неразрешенных внешних элементов: 3
+﻿LINK : warning LNK4098: библиотека по умолчанию "MSVCRT" конфликтует с использованием других библиотек; используйте /NODEFAULTLIB:library
+  Run.vcxproj -> C:\Users\Danii\source\repos\Bebr Engine\Bebr-Engine\Run\Build\bin\Debug-Win32\Run\Run.exe

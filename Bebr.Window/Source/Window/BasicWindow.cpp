@@ -1,4 +1,5 @@
 #include "BasicWindow.hpp"
+#include <unordered_map>
 #include <glfw3.h>
 
 Bebr::Window::BasicWindow::BasicWindow(int width, int height, const std::string& title) : m_title(title)
@@ -7,6 +8,7 @@ Bebr::Window::BasicWindow::BasicWindow(int width, int height, const std::string&
 								 m_title.c_str(),
 								 nullptr, nullptr);
 	InitializeCallbacks();
+	glfwGetWindowPos(m_handler, &m_position.x, &m_position.y);
 }
 
 Bebr::Window::BasicWindow::BasicWindow(const System::Vector2I_t& size, const std::string& title) : m_title(title)
@@ -15,6 +17,7 @@ Bebr::Window::BasicWindow::BasicWindow(const System::Vector2I_t& size, const std
 								 m_title.c_str(),
 								 nullptr, nullptr);
 	InitializeCallbacks();
+	glfwGetWindowPos(m_handler, &m_position.x, &m_position.y);
 }
 
 Bebr::Window::BasicWindow::~BasicWindow()
@@ -51,21 +54,29 @@ void Bebr::Window::BasicWindow::SetTitle(const std::string& title)
 void Bebr::Window::BasicWindow::SetPosition(int x, int y)
 {
 	glfwSetWindowPos(m_handler, x, y);
+	m_position.x = x;
+	m_position.y = y;
 }
 
 void Bebr::Window::BasicWindow::SetPosition(const System::Vector2I_t & position)
 {
 	glfwSetWindowPos(m_handler, position.x, position.y);
+	m_position.x = position.x;
+	m_position.y = position.y;
 }
 
 void Bebr::Window::BasicWindow::SetSize(int width, int height)
 {
 	glfwSetWindowSize(m_handler, width, height);
+	m_size.x = width;
+	m_size.y = height;
 }
 
 void Bebr::Window::BasicWindow::SetSize(const System::Vector2I_t & size)
 {
 	glfwSetWindowSize(m_handler, size.x, size.y);
+	m_size.x = size.x;
+	m_size.y = size.y;
 }
 
 const std::string& Bebr::Window::BasicWindow::GetTitle() const
@@ -85,16 +96,16 @@ const Bebr::System::Vector2I_t& Bebr::Window::BasicWindow::GetSize() const
 
 void Bebr::Window::BasicWindow::InitializeCallbacks()
 {
-	static System::Vector2I_t& position = m_position;
-	glfwSetWindowPosCallback(m_handler, [](GLFWwindow* window, int x, int y)
+	static std::unordered_map<GLFWwindow*, BasicWindow*> handlers;
+	handlers[m_handler] = this;
+	glfwSetWindowPosCallback(m_handler, [](GLFWwindow* handler, int x, int y)
 	{
-		position.x = x;
-		position.y = y;
+		BasicWindow* basicWindow = handlers[handler];
+		basicWindow->SetPosition(x, y);
 	});
-	static System::Vector2I_t& size = m_size;
-	glfwSetWindowSizeCallback(m_handler, [](GLFWwindow* window, int width, int height)
+	glfwSetWindowSizeCallback(m_handler, [](GLFWwindow* handler, int width, int height)
 	{
-		size.x = width;
-		size.y = height;
+		BasicWindow* basicWindow = handlers[handler];
+		basicWindow->SetSize(width, height);
 	});
 }
