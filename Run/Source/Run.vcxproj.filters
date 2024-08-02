@@ -4,6 +4,9 @@
     <Filter Include="Include">
       <UniqueIdentifier>{6917EFFE-D5F6-6D9A-DE0E-F9704A6DD4FB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{EFAC8DF2-5B8C-0C8E-64A4-9764D00273EF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
     </Filter>
@@ -17,5 +20,13 @@
     <ClCompile Include="Run\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fragment shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Resources\vertex shader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

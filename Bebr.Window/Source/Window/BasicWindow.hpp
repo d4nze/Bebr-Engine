@@ -40,6 +40,9 @@ private:
 	std::string m_title;
 	System::Vector2I_t m_position;
 	System::Vector2I_t m_size;
+
+	friend class Keyboard;
+	friend class Mouse;
 };
 }
 }

@@ -60,6 +60,59 @@ project "Bebr.Core"
       defines { "RELEASE" }
       optimize "On"
 
+project "Bebr.GL"
+    kind "StaticLib"
+    language "C++"
+    
+	location "%{prj.name}/Source/"
+	targetdir ("%{prj.name}/Build/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("%{prj.name}/Build/obj/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/Source/**.hpp",
+		"%{prj.name}/Source/**.inl",
+		"%{prj.name}/Source/**.cpp"
+	}
+    
+    vpaths
+    {
+      ["Include"] = { "../**.hpp", "../**.inl" },
+      ["Source"] = { "../**.cpp" }
+    }
+    
+    includedirs
+    {
+        "%{prj.name}/Source",
+		"Bebr.System/Source",
+		"Bebr.Window/Source",
+        "Libraries/GLEW/include"
+    }
+	
+	filter "platforms:Win32"
+		architecture "x86"
+        defines { "WIN32" }
+        libdirs { "Libraries/GLEW/x86/lib" }
+	filter "platforms:Win64"
+		architecture "x86_64"
+        defines { "WIN64" }
+        libdirs { "Libraries/GLEW/x64/lib" }
+    filter {}
+        links
+        {
+            "Bebr.System",
+            "Bebr.Window",
+            "glew32.lib",
+            "opengl32.lib"
+        }
+
+	filter "configurations:Debug"
+      defines { "DEBUG" }
+      symbols "On"
+	filter "configurations:Release"
+      defines { "RELEASE" }
+      optimize "On"
+
 project "Bebr.Graphics"
     kind "StaticLib"
     language "C++"
@@ -172,18 +225,18 @@ project "Bebr.Window"
         includedirs {
             "%{prj.name}/Source",
             "Bebr.System/Source",
-            "Libraries/GLFW/x86/include/GLFW/"
+            "Libraries/GLFW/x86/include/GLFW"
         }
-        libdirs { "Libraries/GLFW/x86/lib/" }
+        libdirs { "Libraries/GLFW/x86/lib" }
 
     filter "platforms:Win64"
         architecture "x86_64"
         includedirs {
             "%{prj.name}/Source",
             "Bebr.System/Source",
-            "Libraries/GLFW/x64/include/GLFW/"
+            "Libraries/GLFW/x64/include/GLFW"
         }
-        libdirs { "Libraries/GLFW/x64/lib/" }
+        libdirs { "Libraries/GLFW/x64/lib" }
 	
 	filter {}
     	links { "Bebr.System", "glfw3.lib" }
@@ -207,13 +260,15 @@ project "Run"
 	{
 		"%{prj.name}/Source/**.hpp",
 		"%{prj.name}/Source/**.inl",
-		"%{prj.name}/Source/**.cpp"
+		"%{prj.name}/Source/**.cpp",
+		"%{prj.name}/Source/**.glsl"
 	}
     
     vpaths
     {
       ["Include"] = { "../**.hpp", "../**.inl" },
-      ["Source"] = { "../**.cpp" }
+      ["Source"] = { "../**.cpp" },
+      ["Shaders"] = { "../**.glsl" }
     }
     
     includedirs
@@ -222,22 +277,34 @@ project "Run"
 		"Bebr.System/Source",
 		"Bebr.Window/Source",
 		"Bebr.Graphics/Source",
-		"Bebr.Core/Source"
+		"Bebr.Core/Source",
+		"Bebr.GL/Source",
+        "Libraries/GLEW/include"
     }
     links
     {
 		"Bebr.System",
-		"Bebr.Window"
+		"Bebr.Window",
+        "Bebr.GL"
     }
 	
+    platformDefine = "WIN32"
+    configurationDefine = "DEBUG"
 	filter "platforms:Win32"
 		architecture "x86"
+        platformDefine = "WIN32"
+        libdirs { "Libraries/GLEW/x86/lib" }
+        postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x86\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
 	filter "platforms:Win64"
 		architecture "x86_64"
-
+        platformDefine = "WIN64"
+        libdirs { "Libraries/GLEW/x64/lib" }
+        postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x64\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
 	filter "configurations:Debug"
-      defines "DEBUG"
+        configurationDefine = "DEBUG"
       symbols "On"
 	filter "configurations:Release"
-      defines "RELEASE"
+        configurationDefine = "RELEASE"
       optimize "On"
+    filter {}
+      defines { configurationDefine, platformDefine }

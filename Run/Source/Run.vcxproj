@@ -113,8 +113,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RELEASE;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;..\..\Bebr.GL\Source;..\..\Libraries\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -122,14 +122,18 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\Libraries\GLEW\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /B /Y "$(SolutionDir)Libraries\GLEW\x86\bin\glew32.dll" "../Build/bin/Debug-Win32/Run"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Win64|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RELEASE;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;..\..\Bebr.GL\Source;..\..\Libraries\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
@@ -137,14 +141,18 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\Libraries\GLEW\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /B /Y "$(SolutionDir)Libraries\GLEW\x64\bin\glew32.dll" "../Build/bin/Debug-Win64/Run"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RELEASE;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;..\..\Bebr.GL\Source;..\..\Libraries\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -156,14 +164,18 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\Libraries\GLEW\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /B /Y "$(SolutionDir)Libraries\GLEW\x86\bin\glew32.dll" "../Build/bin/Release-Win32/Run"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Win64|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RELEASE;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\..\Bebr.System\Source;..\..\Bebr.Window\Source;..\..\Bebr.Graphics\Source;..\..\Bebr.Core\Source;..\..\Bebr.GL\Source;..\..\Libraries\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -175,7 +187,11 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\Libraries\GLEW\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /B /Y "$(SolutionDir)Libraries\GLEW\x64\bin\glew32.dll" "../Build/bin/Release-Win64/Run"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Run\Main.hpp" />
@@ -184,11 +200,18 @@
     <ClCompile Include="Run\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\fragment shader.glsl" />
+    <None Include="Resources\vertex shader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Bebr.System\Source\Bebr.System.vcxproj">
       <Project>{9389D151-FF3E-4A47-8833-441EF4E7404B}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Bebr.Window\Source\Bebr.Window.vcxproj">
       <Project>{66A3015A-D258-7A4F-5B4D-7426C7017153}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Bebr.GL\Source\Bebr.GL.vcxproj">
+      <Project>{610009CF-CDDF-876A-D6F7-12414256EECB}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
