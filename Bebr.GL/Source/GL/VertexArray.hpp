@@ -1,11 +1,12 @@
 #pragma once
-#include "Resource.hpp"
+#include "VertexBuffer.hpp"
+#include "BufferLayout.hpp"
 
 namespace Bebr
 {
 namespace GL
 {
-class VertexArray
+class VertexArray : public Resource
 {
 public:
 	VertexArray();
@@ -15,6 +16,8 @@ public:
 public:
 	void Bind();
 	void Unbind();
+
+	void SetAttributes(VertexBuffer& vertexBuffer, const BufferLayout& layout);
 };
 }
 }

@@ -1,14 +1,16 @@
+#include "Main.hpp"
+#include <GL/glew.h>
+
 #include <GL/API.hpp>
 #include <GL/Program.hpp>
+#include <GL/VertexArray.hpp>
 #include <GL/VertexBuffer.hpp>
 #include <GL/BufferLayout.hpp>
 
-#include <Run/Main.hpp>
 #include <System/Log.hpp>
+
 #include <Window/API.hpp>
 #include <Window/BasicWindow.hpp>
-
-#include <GL/glew.h>
 
 int main()
 {
@@ -29,45 +31,39 @@ int main()
 		return -1;
 	}
 
-    Bebr::GL::Program shaderProgram("Resources/vertex shader.glsl", "Resources/fragment shader.glsl");
+    Bebr::GL::Program shaderProgram("Resources/vertex shader.glsl",
+                                    "Resources/fragment shader.glsl");
 
-    GLfloat vertices[] = {
+    float vertices[] = {
         // Позиции          // Цвета
-        0.0f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // Верхняя вершина       (красная)
-       -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // Левая нижняя вершина  (зелёная)
+        0.0f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // Верхняя       вершина (красная)
+       -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // Левая  нижняя вершина (зелёная)
         0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // Правая нижняя вершина (синяя)
     };
 
     Bebr::GL::BufferLayout bufferLayout;
     bufferLayout.Push<float>(false, 3); // Position
     bufferLayout.Push<float>(false, 3); // Color
-
-    Bebr::GL::VertexBuffer vertexBuffer(vertices, sizeof(vertices));
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
+    Bebr::GL::VertexBuffer vertexBuffer;
     vertexBuffer.Bind();
-
-    GLboolean;
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
+    vertexBuffer.BufferData(vertices, sizeof(vertices));
     vertexBuffer.Unbind();
-    glBindVertexArray(0);
+    Bebr::GL::VertexArray vertexArray;
+    vertexArray.Bind();
+    vertexArray.SetAttributes(vertexBuffer, bufferLayout);
+    vertexArray.Unbind();
 
 	while (window.IsOpen())
 	{
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shaderProgram.Use();
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0);
+        shaderProgram.Activate();
+        {
+            vertexArray.Bind();
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            vertexArray.Unbind();
+        }
+        shaderProgram.Deactivate();
 
 		Bebr::Window::API::PollEvents();
 		window.SwapBuffers();

@@ -13,13 +13,13 @@ Bebr::GL::BufferLayout::~BufferLayout()
 template<>
 void Bebr::GL::BufferLayout::Push<float>(bool normalized, std::uint32_t count)
 {
-	Element* element = new Element{ normalized, count, false, sizeof(float) };
+	Element* element = new Element{ GL_FLOAT, count, normalized, sizeof(float) };
 	Push(element);
 }
 
 void Bebr::GL::BufferLayout::Push(Element* element)
 {
-	if (element->count = 0)
+	if (element->count == 0)
 	{
 		delete element;
 		return;
@@ -31,4 +31,9 @@ void Bebr::GL::BufferLayout::Push(Element* element)
 const std::vector<Bebr::GL::BufferLayout::Element*>& Bebr::GL::BufferLayout::GetElements() const
 {
 	return m_elements;
+}
+
+std::int32_t Bebr::GL::BufferLayout::GetStrideSize() const
+{
+	return m_strideSize;
 }

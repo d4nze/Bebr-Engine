@@ -1,11 +1,12 @@
 #pragma once
 #include <string>
+#include "Resource.hpp"
 
 namespace Bebr
 {
 namespace GL
 {
-class Program
+class Program : public Resource
 {
 public:
     Program(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
@@ -13,14 +14,11 @@ public:
     ~Program() = default;
 
 public:
-    void Use();
-    unsigned int GetID() const;
+    void Activate();
+    void Deactivate();
 
 private:
     void LinkProgram(unsigned int vertexShader, unsigned int fragmentShader);
-
-private:
-    unsigned int m_id;
 };
 }
 }

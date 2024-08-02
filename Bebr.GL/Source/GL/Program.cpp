@@ -4,24 +4,21 @@
 #include <fstream>
 #include <sstream>
 
-static class Shader
+static class Shader : public Bebr::GL::Resource
 {
 public:
     Shader(const char* path, unsigned int type);
     ~Shader();
 
-public:
-    unsigned int GetID();
-
 private:
     void ReadFile(const char* path);
     void Compile(unsigned int type);
 
-    unsigned int    m_id;
-    std::string     m_code;
+private:
+    std::string m_code;
 };
 
-Shader::Shader(const char* path, unsigned int type)
+Shader::Shader(const char* path, unsigned int type) : Resource()
 {
     ReadFile(path);
     Compile(type);
@@ -30,11 +27,6 @@ Shader::Shader(const char* path, unsigned int type)
 Shader::~Shader()
 {
     glDeleteShader(m_id);
-}
-
-unsigned int Shader::GetID()
-{
-    return m_id;
 }
 
 void Shader::ReadFile(const char* path)
@@ -69,26 +61,26 @@ void Shader::Compile(unsigned int type)
     }
 }
 
-Bebr::GL::Program::Program(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
+Bebr::GL::Program::Program(const std::string& vertexShaderPath,
+                           const std::string& fragmentShaderPath) : Resource(glCreateProgram())
 {
     Shader vertexShader(vertexShaderPath.c_str(), GL_VERTEX_SHADER);
     Shader fragmentShader(fragmentShaderPath.c_str(), GL_FRAGMENT_SHADER);
     LinkProgram(vertexShader.GetID(), fragmentShader.GetID());
 }
 
-void Bebr::GL::Program::Use()
+void Bebr::GL::Program::Activate()
 {
     glUseProgram(m_id);
 }
 
-unsigned int Bebr::GL::Program::GetID() const
+void Bebr::GL::Program::Deactivate()
 {
-    return m_id;
+    glUseProgram(0);
 }
 
 void Bebr::GL::Program::LinkProgram(unsigned int vertexShader, unsigned int fragmentShader)
 {
-    m_id = glCreateProgram();
     glAttachShader(m_id, vertexShader);
     glAttachShader(m_id, fragmentShader);
     glLinkProgram(m_id);

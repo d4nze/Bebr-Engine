@@ -1,21 +1,24 @@
 #pragma once
-#include "Resource.hpp"
+#include "Buffer.hpp"
 #include "Size.hpp"
 
 namespace Bebr
 {
 namespace GL
 {
-class VertexBuffer : public Resource
+class VertexBuffer : public Buffer
 {
 public:
-	VertexBuffer(const void* data, Size_t size);
+	VertexBuffer() = default;
 	VertexBuffer(const VertexBuffer&) = default;
-	~VertexBuffer();
+	~VertexBuffer() = default;
 
 public:
 	void Bind();
 	void Unbind();
+
+	void BufferData(const void* data, Size_t size);
+	void BufferSubData(const void* data, Size_t size, Size_t offset = 0);
 };
 }
 }

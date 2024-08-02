@@ -24,7 +24,9 @@ public:
 public:
 	template<typename T>
 	void Push(bool normalized, std::uint32_t count = 1);
+
 	const std::vector<Element*>& GetElements() const;
+	std::int32_t GetStrideSize() const;
 
 private:
 	void Push(Element* element);
