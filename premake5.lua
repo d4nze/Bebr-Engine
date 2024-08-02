@@ -50,15 +50,16 @@ project "Bebr.Core"
 	
 	filter "platforms:Win32"
 		architecture "x86"
+        defines "WIN32"
 	filter "platforms:Win64"
 		architecture "x86_64"
-
+        defines "WIN64"
 	filter "configurations:Debug"
-      defines { "DEBUG" }
-      symbols "On"
+        symbols "On"
+        defines "DEBUG"
 	filter "configurations:Release"
-      defines { "RELEASE" }
-      optimize "On"
+        optimize "On"
+        defines "RELEASE"
 
 project "Bebr.GL"
     kind "StaticLib"
@@ -91,12 +92,18 @@ project "Bebr.GL"
 	
 	filter "platforms:Win32"
 		architecture "x86"
-        defines { "WIN32" }
+        defines "WIN32"
         libdirs { "Libraries/GLEW/x86/lib" }
 	filter "platforms:Win64"
 		architecture "x86_64"
-        defines { "WIN64" }
+        defines "WIN64"
         libdirs { "Libraries/GLEW/x64/lib" }
+	filter "configurations:Debug"
+        symbols "On"
+        defines "DEBUG"
+	filter "configurations:Release"
+        optimize "On"
+        defines "RELEASE"
     filter {}
         links
         {
@@ -105,13 +112,6 @@ project "Bebr.GL"
             "glew32.lib",
             "opengl32.lib"
         }
-
-	filter "configurations:Debug"
-      defines { "DEBUG" }
-      symbols "On"
-	filter "configurations:Release"
-      defines { "RELEASE" }
-      optimize "On"
 
 project "Bebr.Graphics"
     kind "StaticLib"
@@ -148,15 +148,16 @@ project "Bebr.Graphics"
 	
 	filter "platforms:Win32"
 		architecture "x86"
+        defines "WIN32"
 	filter "platforms:Win64"
 		architecture "x86_64"
-
+        defines "WIN64"
 	filter "configurations:Debug"
-      defines { "DEBUG" }
-      symbols "On"
+        symbols "On"
+        defines "DEBUG"
 	filter "configurations:Release"
-      defines { "RELEASE" }
-      optimize "On"
+        optimize "On"
+        defines "RELEASE"
 
 project "Bebr.System"
     kind "StaticLib"
@@ -189,15 +190,18 @@ project "Bebr.System"
 	
 	filter "platforms:Win32"
 		architecture "x86"
+        defines "WIN32"
 	filter "platforms:Win64"
 		architecture "x86_64"
-
+        defines "WIN64"
 	filter "configurations:Debug"
-      defines { "DEBUG" }
-      symbols "On"
+        symbols "On"
+        defines "DEBUG"
 	filter "configurations:Release"
-      defines { "RELEASE" }
-      optimize "On"
+        optimize "On"
+        defines "RELEASE"
+    filter {}
+        defines { platformDefine, configurationDefine }
 
 project "Bebr.Window"
     kind "StaticLib"
@@ -222,31 +226,30 @@ project "Bebr.Window"
     
 	filter "platforms:Win32"
         architecture "x86"
+        defines "WIN32"
         includedirs {
             "%{prj.name}/Source",
             "Bebr.System/Source",
             "Libraries/GLFW/x86/include/GLFW"
         }
         libdirs { "Libraries/GLFW/x86/lib" }
-
     filter "platforms:Win64"
         architecture "x86_64"
+        defines "WIN64"
         includedirs {
             "%{prj.name}/Source",
             "Bebr.System/Source",
             "Libraries/GLFW/x64/include/GLFW"
         }
         libdirs { "Libraries/GLFW/x64/lib" }
-	
+    filter "configurations:Debug"
+        symbols "On"
+        defines "DEBUG"
+    filter "configurations:Release"
+        optimize "On"
+        defines "RELEASE"
 	filter {}
     	links { "Bebr.System", "glfw3.lib" }
-
-	filter "configurations:Debug"
-      defines { "DEBUG" }
-      symbols "On"
-	filter "configurations:Release"
-      defines { "RELEASE" }
-      optimize "On"
 
 project "Run"
 	kind "ConsoleApp"
@@ -288,23 +291,19 @@ project "Run"
         "Bebr.GL"
     }
 	
-    platformDefine = "WIN32"
-    configurationDefine = "DEBUG"
 	filter "platforms:Win32"
 		architecture "x86"
-        platformDefine = "WIN32"
+        defines "WIN32"
         libdirs { "Libraries/GLEW/x86/lib" }
         postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x86\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
 	filter "platforms:Win64"
 		architecture "x86_64"
-        platformDefine = "WIN64"
+        defines "WIN64"
         libdirs { "Libraries/GLEW/x64/lib" }
         postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x64\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
 	filter "configurations:Debug"
-        configurationDefine = "DEBUG"
-      symbols "On"
+        symbols "On"
+        defines "DEBUG"
 	filter "configurations:Release"
-        configurationDefine = "RELEASE"
-      optimize "On"
-    filter {}
-      defines { configurationDefine, platformDefine }
+        optimize "On"
+        defines "RELEASE"
