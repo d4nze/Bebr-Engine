@@ -1,5 +1,6 @@
 #include "API.hpp"
 #include <GL/glew.h>
+#include "Viewport.hpp"
 
 static bool initialized = false;
 
@@ -39,6 +40,15 @@ bool Bebr::GL::API::IsExperimental()
 bool Bebr::GL::API::Initialize()
 {
 	initialized = (glewInit() == GLEW_OK);
+	if (!initialized)
+	{
+		return false;
+	}
+
+	std::int32_t viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	Viewport::SetRectangle(viewport[0], viewport[1], viewport[2], viewport[3]);
+
 	return true;
 }
 

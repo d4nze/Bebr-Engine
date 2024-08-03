@@ -19,6 +19,14 @@ inline Bebr::System::Vector3<T>::Vector3(const Vector3<T>& other)
 {}
 
 template<typename T>
+template<typename U>
+inline Bebr::System::Vector3<T>::Vector3(const Vector3<U>&other)
+    : x(static_cast<T>(other.x))
+    , y(static_cast<T>(other.y))
+    , z(static_cast<T>(other.z))
+{}
+
+template<typename T>
 constexpr Bebr::System::Vector3<T> Bebr::System::operator-(Vector3<T> right)
 {
     return Vector3<T>(-right.x, -right.y, -right.z);

@@ -9,6 +9,7 @@ Bebr::Window::BasicWindow::BasicWindow(int width, int height, const std::string&
 								 nullptr, nullptr);
 	InitializeCallbacks();
 	glfwGetWindowPos(m_handler, &m_position.x, &m_position.y);
+	glfwGetWindowSize(m_handler, &m_size.x, &m_size.y);
 }
 
 Bebr::Window::BasicWindow::BasicWindow(const System::Vector2I_t& size, const std::string& title) : m_title(title)

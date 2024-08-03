@@ -11,9 +11,16 @@ inline Bebr::System::Vector2<T>::Vector2(T x, T y) : x(x), y(y)
 {}
 
 template<typename T>
-inline Bebr::System::Vector2<T>::Vector2(const Vector2<T>& other)
+inline Bebr::System::Vector2<T>::Vector2(const Vector2<T>&other)
 	: x(other.x)
 	, y(other.y)
+{}
+
+template<typename T>
+template<typename U>
+inline Bebr::System::Vector2<T>::Vector2(const Vector2<U>&other)
+	: x(static_cast<T>(other.x))
+	, y(static_cast<T>(other.y))
 {}
 
 template<typename T>

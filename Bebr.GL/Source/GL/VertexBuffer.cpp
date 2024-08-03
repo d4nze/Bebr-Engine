@@ -8,7 +8,9 @@ void Bebr::GL::VertexBuffer::Bind()
 
 void Bebr::GL::VertexBuffer::Unbind()
 {
+	#ifdef DEBUG
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	#endif
 }
 
 void Bebr::GL::VertexBuffer::BufferData(const void* data, Size_t size)

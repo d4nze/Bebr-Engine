@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-static class Shader : public Bebr::GL::Resource
+class Shader : public Bebr::GL::Resource
 {
 public:
     Shader(const char* path, unsigned int type);
@@ -41,7 +41,7 @@ void Shader::ReadFile(const char* path)
         file.close();
         m_code = stream.str();
     }
-    catch (std::ifstream::failure& e) {}
+    catch (std::ifstream::failure&) {}
 }
 
 void Shader::Compile(unsigned int type)
@@ -76,7 +76,9 @@ void Bebr::GL::Program::Activate()
 
 void Bebr::GL::Program::Deactivate()
 {
+    #ifdef DEBUG
     glUseProgram(0);
+    #endif
 }
 
 void Bebr::GL::Program::LinkProgram(unsigned int vertexShader, unsigned int fragmentShader)

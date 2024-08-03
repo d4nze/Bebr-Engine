@@ -8,6 +8,7 @@
 #include <GL/Renderer.hpp>
 #include <GL/VertexArray.hpp>
 #include <GL/VertexBuffer.hpp>
+#include <GL/Viewport.hpp>
 
 #include <System/Color.hpp>
 #include <System/Log.hpp>
@@ -41,10 +42,10 @@ int main()
                                     "Resources/fragment shader.glsl");
 
     float vertices[] = {
-        // Позиции         // Цвета
-        0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Верхняя        вершина (красная)
-       -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Левая  нижняя  вершина (зелёная)
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Правая нижняя  вершина (синяя)
+        // Position        // Color
+        0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Top
+       -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Bottom-left
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Bottom-right
     };
 
     Bebr::GL::BufferLayout bufferLayout;
@@ -63,13 +64,12 @@ int main()
 
 	while (window.IsOpen())
 	{
+        Bebr::GL::Viewport::SetRectangle(Bebr::System::Vector2F_t(), window.GetSize());
         Bebr::GL::Renderer::Clear();
         Bebr::GL::Renderer::ClearColor(clearColor);
 
         shaderProgram.Activate();
-        Bebr::GL::Renderer::Render(vertexArray,
-                                   Bebr::GL::Renderer::Mode::Triangles,
-                                   0, 3);
+        Bebr::GL::Renderer::Render(vertexArray, Bebr::GL::Renderer::Mode::Triangles, 0, 3);
         shaderProgram.Deactivate();
 
 		Bebr::Window::API::PollEvents();
