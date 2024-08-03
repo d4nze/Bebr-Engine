@@ -2,11 +2,14 @@
 #include <GL/glew.h>
 
 #include <GL/API.hpp>
+#include <GL/Blending.hpp>
+#include <GL/BufferLayout.hpp>
 #include <GL/Program.hpp>
+#include <GL/Renderer.hpp>
 #include <GL/VertexArray.hpp>
 #include <GL/VertexBuffer.hpp>
-#include <GL/BufferLayout.hpp>
 
+#include <System/Color.hpp>
 #include <System/Log.hpp>
 
 #include <Window/API.hpp>
@@ -30,20 +33,23 @@ int main()
 		Bebr::Window::API::Terminate();
 		return -1;
 	}
+    Bebr::GL::API::SetBlending(true);
+    Bebr::GL::Blending::SetBlendFunction(Bebr::GL::Blending::Factor::SourceAlpha,
+                                         Bebr::GL::Blending::Factor::OneMinusSourceAlpha);
 
     Bebr::GL::Program shaderProgram("Resources/vertex shader.glsl",
                                     "Resources/fragment shader.glsl");
 
     float vertices[] = {
-        // Позиции          // Цвета
-        0.0f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // Верхняя       вершина (красная)
-       -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // Левая  нижняя вершина (зелёная)
-        0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // Правая нижняя вершина (синяя)
+        // Позиции         // Цвета
+        0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Верхняя        вершина (красная)
+       -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Левая  нижняя  вершина (зелёная)
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Правая нижняя  вершина (синяя)
     };
 
     Bebr::GL::BufferLayout bufferLayout;
     bufferLayout.Push<float>(false, 3); // Position
-    bufferLayout.Push<float>(false, 3); // Color
+    bufferLayout.Push<float>(false, 4); // Color
     Bebr::GL::VertexBuffer vertexBuffer;
     vertexBuffer.Bind();
     vertexBuffer.BufferData(vertices, sizeof(vertices));
@@ -53,16 +59,17 @@ int main()
     vertexArray.SetAttributes(vertexBuffer, bufferLayout);
     vertexArray.Unbind();
 
+    const Bebr::System::ColorF clearColor(1.f, 0.f, 0.f);
+
 	while (window.IsOpen())
 	{
-        glClear(GL_COLOR_BUFFER_BIT);
+        Bebr::GL::Renderer::Clear();
+        Bebr::GL::Renderer::ClearColor(clearColor);
 
         shaderProgram.Activate();
-        {
-            vertexArray.Bind();
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-            vertexArray.Unbind();
-        }
+        Bebr::GL::Renderer::Render(vertexArray,
+                                   Bebr::GL::Renderer::Mode::Triangles,
+                                   0, 3);
         shaderProgram.Deactivate();
 
 		Bebr::Window::API::PollEvents();
