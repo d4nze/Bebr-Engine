@@ -16,7 +16,6 @@ template<typename T>
 void Log(T first)
 {
 	LOG(first);
-	LOG(' ');
 }
 template<typename T, typename... Args>
 void Log(T first, Args... args)

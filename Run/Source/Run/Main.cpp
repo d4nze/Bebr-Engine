@@ -11,6 +11,7 @@
 #include <GL/Viewport.hpp>
 
 #include <System/Color.hpp>
+#include <System/Matrix.hpp>
 #include <System/Log.hpp>
 
 #include <Window/API.hpp>
@@ -18,6 +19,8 @@
 
 int main()
 {
+    Bebr::System::Matrix2_t<int> matrix({ 1, 2, 3, 4 });
+
 	if (!Bebr::Window::API::Initialize())
 	{
 		Bebr::System::Logln("error initializing GLFW");
@@ -43,9 +46,9 @@ int main()
 
     float vertices[] = {
         // Position        // Color
-        0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Top
-       -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Bottom-left
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, // Bottom-right
+        0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Top
+       -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-left
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-right
     };
 
     Bebr::GL::BufferLayout bufferLayout;
@@ -60,16 +63,14 @@ int main()
     vertexArray.SetAttributes(vertexBuffer, bufferLayout);
     vertexArray.Unbind();
 
-    const Bebr::System::ColorF clearColor(1.f, 0.f, 0.f);
-
 	while (window.IsOpen())
 	{
         Bebr::GL::Viewport::SetRectangle(Bebr::System::Vector2F_t(), window.GetSize());
         Bebr::GL::Renderer::Clear();
-        Bebr::GL::Renderer::ClearColor(clearColor);
+        Bebr::GL::Renderer::ClearColor();
 
         shaderProgram.Activate();
-        Bebr::GL::Renderer::Render(vertexArray, Bebr::GL::Renderer::Mode::Triangles, 0, 3);
+        Bebr::GL::Renderer::Render(vertexArray, Bebr::GL::Renderer::Mode::LineLoop, 0, 3);
         shaderProgram.Deactivate();
 
 		Bebr::Window::API::PollEvents();

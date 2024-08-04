@@ -69,7 +69,7 @@ constexpr Bebr::System::Vector3<T> Bebr::System::operator/(T left, Vector3<T> ri
 }
 
 template<typename T>
-constexpr Bebr::System::Vector3<T> Bebr::System::operator+=(Vector3<T> left, Vector3<T> right)
+constexpr Bebr::System::Vector3<T>& Bebr::System::operator+=(Vector3<T>& left, Vector3<T> right)
 {
     left.x += right.x;
     left.y += right.y;
@@ -78,7 +78,7 @@ constexpr Bebr::System::Vector3<T> Bebr::System::operator+=(Vector3<T> left, Vec
 }
 
 template<typename T>
-constexpr Bebr::System::Vector3<T> Bebr::System::operator-=(Vector3<T> left, Vector3<T> right)
+constexpr Bebr::System::Vector3<T>& Bebr::System::operator-=(Vector3<T>& left, Vector3<T> right)
 {
     left.x -= right.x;
     left.y -= right.y;
@@ -87,7 +87,7 @@ constexpr Bebr::System::Vector3<T> Bebr::System::operator-=(Vector3<T> left, Vec
 }
 
 template<typename T>
-constexpr Bebr::System::Vector3<T> Bebr::System::operator*=(Vector3<T> left, T right)
+constexpr Bebr::System::Vector3<T>& Bebr::System::operator*=(Vector3<T>& left, T right)
 {
     left.x *= right;
     left.y *= right;
@@ -96,7 +96,7 @@ constexpr Bebr::System::Vector3<T> Bebr::System::operator*=(Vector3<T> left, T r
 }
 
 template<typename T>
-constexpr Bebr::System::Vector3<T> Bebr::System::operator/=(Vector3<T> left, T right)
+constexpr Bebr::System::Vector3<T>& Bebr::System::operator/=(Vector3<T>& left, T right)
 {
     left.x /= right;
     left.y /= right;
@@ -105,7 +105,7 @@ constexpr Bebr::System::Vector3<T> Bebr::System::operator/=(Vector3<T> left, T r
 }
 
 template<typename T>
-constexpr Bebr::System::Vector3<T> Bebr::System::operator*=(T left, Vector3<T> right)
+constexpr Bebr::System::Vector3<T>& Bebr::System::operator*=(T left, Vector3<T>& right)
 {
     right.x *= left;
     right.y *= left;
@@ -114,7 +114,7 @@ constexpr Bebr::System::Vector3<T> Bebr::System::operator*=(T left, Vector3<T> r
 }
 
 template<typename T>
-constexpr Bebr::System::Vector3<T> Bebr::System::operator/=(T left, Vector3<T> right)
+constexpr Bebr::System::Vector3<T>& Bebr::System::operator/=(T left, Vector3<T>& right)
 {
     right.x /= left;
     right.y /= left;

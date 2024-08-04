@@ -38,17 +38,17 @@ template<typename T>
 constexpr Vector3<T> operator/(T left, Vector3<T> right);
 
 template<typename T>
-constexpr Vector3<T> operator+=(Vector3<T> left, Vector3<T> right);
+constexpr Vector3<T>& operator+=(Vector3<T>& left, Vector3<T> right);
 template<typename T>
-constexpr Vector3<T> operator-=(Vector3<T> left, Vector3<T> right);
+constexpr Vector3<T>& operator-=(Vector3<T>& left, Vector3<T> right);
 template<typename T>
-constexpr Vector3<T> operator*=(Vector3<T> left, T right);
+constexpr Vector3<T>& operator*=(Vector3<T>& left, T right);
 template<typename T>
-constexpr Vector3<T> operator/=(Vector3<T> left, T right);
+constexpr Vector3<T>& operator/=(Vector3<T>& left, T right);
 template<typename T>
-constexpr Vector3<T> operator*=(T left, Vector3<T> right);
+constexpr Vector3<T>& operator*=(T left, Vector3<T>& right);
 template<typename T>
-constexpr Vector3<T> operator/=(T left, Vector3<T> right);
+constexpr Vector3<T>& operator/=(T left, Vector3<T>& right);
 
 template<typename T>
 constexpr bool operator==(Vector3<T> left, Vector3<T> right);

@@ -66,7 +66,7 @@ constexpr Bebr::System::Vector2<T> Bebr::System::operator/(T left, Vector2<T> ri
 }
 
 template<typename T>
-constexpr Bebr::System::Vector2<T> Bebr::System::operator+=(Vector2<T> left, Vector2<T> right)
+constexpr Bebr::System::Vector2<T>& Bebr::System::operator+=(Vector2<T>& left, Vector2<T> right)
 {
 	left.x += right.x;
 	left.y += right.y;
@@ -74,7 +74,7 @@ constexpr Bebr::System::Vector2<T> Bebr::System::operator+=(Vector2<T> left, Vec
 }
 
 template<typename T>
-constexpr Bebr::System::Vector2<T> Bebr::System::operator-=(Vector2<T> left, Vector2<T> right)
+constexpr Bebr::System::Vector2<T>& Bebr::System::operator-=(Vector2<T>& left, Vector2<T> right)
 {
 	left.x -= right.x;
 	left.y -= right.y;
@@ -82,7 +82,7 @@ constexpr Bebr::System::Vector2<T> Bebr::System::operator-=(Vector2<T> left, Vec
 }
 
 template<typename T>
-constexpr Bebr::System::Vector2<T> Bebr::System::operator*=(Vector2<T> left, T right)
+constexpr Bebr::System::Vector2<T>& Bebr::System::operator*=(Vector2<T>& left, T right)
 {
 	left.x -= right.x;
 	left.y -= right.y;
@@ -90,13 +90,13 @@ constexpr Bebr::System::Vector2<T> Bebr::System::operator*=(Vector2<T> left, T r
 }
 
 template<typename T>
-constexpr Bebr::System::Vector2<T> Bebr::System::operator/=(Vector2<T> left, T right)
+constexpr Bebr::System::Vector2<T>& Bebr::System::operator/=(Vector2<T>& left, T right)
 {
 	return Vector2<T>();
 }
 
 template<typename T>
-constexpr Bebr::System::Vector2<T> Bebr::System::operator*=(T left, Vector2<T> right)
+constexpr Bebr::System::Vector2<T>& Bebr::System::operator*=(T left, Vector2<T>& right)
 {
 	right.x *= left;
 	right.y *= left;
@@ -104,7 +104,7 @@ constexpr Bebr::System::Vector2<T> Bebr::System::operator*=(T left, Vector2<T> r
 }
 
 template<typename T>
-constexpr Bebr::System::Vector2<T> Bebr::System::operator/=(T left, Vector2<T> right)
+constexpr Bebr::System::Vector2<T>& Bebr::System::operator/=(T left, Vector2<T>& right)
 {
 	right.x /= left;
 	right.y /= left;
