@@ -27,8 +27,9 @@ inline Bebr::System::Matrix<T, width, height>::Matrix(T value)
 }
 
 template<typename T, std::uint32_t width, std::uint32_t height>
-inline Bebr::System::Matrix<T, width, height>::Matrix(std::array<T, width* height> data)
+inline Bebr::System::Matrix<T, width, height>::Matrix(const std::array<T, width* height>& data)
 {
+
 	const std::uint32_t size = width * height;
 	for (std::uint32_t i = 0; i < size; i++)
 	{
@@ -66,6 +67,12 @@ template<typename T, std::uint32_t width, std::uint32_t height>
 inline Bebr::System::Vector2U_t Bebr::System::Matrix<T, width, height>::GetSize() const
 {
 	return Vector2U_t(width, height);
+}
+
+template<typename T, std::uint32_t width, std::uint32_t height>
+inline const T* Bebr::System::Matrix<T, width, height>::GetData() const
+{
+	return &m_data[0][0];
 }
 
 template<typename T, std::uint32_t width, std::uint32_t height>

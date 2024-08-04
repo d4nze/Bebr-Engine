@@ -4,8 +4,11 @@ layout(location = 1) in vec4 aColor;
 
 out vec4 ourColor;
 
+uniform mat4 uModel;
+uniform mat4 uCamera;
+
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    gl_Position = vec4(aPos, 1.0) * uModel * uCamera;
     ourColor = aColor;
 }

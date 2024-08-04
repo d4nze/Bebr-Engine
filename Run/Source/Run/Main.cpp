@@ -1,5 +1,6 @@
 #include "Main.hpp"
 #include <GL/glew.h>
+#include <chrono>
 
 #include <GL/API.hpp>
 #include <GL/Blending.hpp>
@@ -16,11 +17,74 @@
 
 #include <Window/API.hpp>
 #include <Window/BasicWindow.hpp>
+#include <Window/Keyboard.hpp>
+
+class Timer
+{
+public:
+    Timer()
+    {
+        Reset();
+    }
+    
+public:
+    void Reset()
+    {
+        m_startTime = std::chrono::high_resolution_clock::now();
+    }
+    float GetDeltaTime()
+    {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float, std::chrono::seconds::period> deltaTime = currentTime - m_startTime;
+        Reset();
+        return deltaTime.count();
+    }
+
+private:
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_startTime;
+};
+
+class Camera
+{
+public:
+    Camera(float x, float y, float width, float height)
+        : m_position(Bebr::System::CreateIdentityMatrix<float, 4>())
+        , m_descale (Bebr::System::CreateIdentityMatrix<float, 4>())
+    {
+        m_position[3][0] = x;
+        m_position[3][1] = y;
+        m_descale[0][0] = 2.f / width;
+        m_descale[1][1] = 2.f / height;
+    }
+
+public:
+    Bebr::System::Matrix4_t<float> GetMatrix() const
+    {
+        return m_descale * m_position;
+    }
+    
+private:
+    Bebr::System::Matrix4_t<float> m_position;
+    Bebr::System::Matrix4_t<float> m_descale;
+};
+
+template<typename T, std::uint32_t width, std::uint32_t height>
+void PrintMatrix(const Bebr::System::Matrix<T, width, height>& matrix)
+{
+    for (std::uint32_t y = 0; y < height; y++)
+    {
+        for (std::uint32_t x = 0; x < width; x++)
+        {
+            Bebr::System::Log(matrix[x][y]);
+            Bebr::System::Log(' ');
+        }
+        Bebr::System::Log('\n');
+    }
+    Bebr::System::Log('\n');
+}
 
 int main()
 {
-    Bebr::System::Matrix2_t<int> matrix({ 1, 2, 3, 4 });
-
 	if (!Bebr::Window::API::Initialize())
 	{
 		Bebr::System::Logln("error initializing GLFW");
@@ -28,6 +92,7 @@ int main()
 	}
 
 	Bebr::Window::BasicWindow window(640, 480, "Bebra window");
+    Bebr::Window::Keyboard keyboard(window);
 	window.MakeCurrentContext();
 
 	Bebr::GL::API::SetExperimental(true);
@@ -50,6 +115,8 @@ int main()
        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-left
         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-right
     };
+    Bebr::System::Matrix4_t<float> position = Bebr::System::CreateIdentityMatrix<float, 4>();
+    Camera camera(0.f, 0.f, 8.f, 8.f);
 
     Bebr::GL::BufferLayout bufferLayout;
     bufferLayout.Push<float>(false, 3); // Position
@@ -65,15 +132,37 @@ int main()
 
 	while (window.IsOpen())
 	{
+		Bebr::Window::API::PollEvents();
+        keyboard.Update();
+
+        static Timer timer;
+        float deltaTime = timer.GetDeltaTime();
+        float speed = deltaTime * 2.f;
+        Bebr::System::Vector2F_t offset;
+        if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Left))
+            offset.x -= speed;
+        if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Right))
+            offset.x += speed;
+        if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Up))
+            offset.y += speed;
+        if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Down))
+            offset.y -= speed;
+        position[3][0] += offset.x;
+        position[3][1] += offset.y;
+
+        if (keyboard.IsKeyPressed(Bebr::Window::Keyboard::Key::Escape))
+            PrintMatrix(position);
+
         Bebr::GL::Viewport::SetRectangle(Bebr::System::Vector2F_t(), window.GetSize());
         Bebr::GL::Renderer::Clear();
         Bebr::GL::Renderer::ClearColor();
 
         shaderProgram.Activate();
+        shaderProgram.SetUniform("uModel", position);
+        shaderProgram.SetUniform("uCamera", camera.GetMatrix());
         Bebr::GL::Renderer::Render(vertexArray, Bebr::GL::Renderer::Mode::LineLoop, 0, 3);
         shaderProgram.Deactivate();
 
-		Bebr::Window::API::PollEvents();
 		window.SwapBuffers();
 	}
 

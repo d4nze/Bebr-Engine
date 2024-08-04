@@ -40,7 +40,7 @@ class Matrix
 {
 public:
 	Matrix(T value = 0);
-	Matrix(std::array<T, width* height> data);
+	Matrix(const std::array<T, width* height>& data);
 	Matrix(const Matrix& other) = default;
 	~Matrix() = default;
 
@@ -50,6 +50,7 @@ public:
 	std::uint32_t	GetWidth()	const;
 	std::uint32_t	GetHeight() const;
 	Vector2U_t		GetSize()	const;
+	const T*		GetData()	const;
 
 public:
 	Column<T> operator[](int index);
