@@ -1,0 +1,10 @@
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+.vs/
+Bebr.Core/Build/
+Bebr.GL/Build/
+Bebr.System/Build/
+Bebr.Window/Build/
+Run/Build/
