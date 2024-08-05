@@ -5,6 +5,7 @@
 #include <GL/API.hpp>
 #include <GL/Blending.hpp>
 #include <GL/BufferLayout.hpp>
+#include <GL/ElementBuffer.hpp>
 #include <GL/Program.hpp>
 #include <GL/Renderer.hpp>
 #include <GL/VertexArray.hpp>
@@ -106,17 +107,22 @@ int main()
     Bebr::GL::Blending::SetBlendFunction(Bebr::GL::Blending::Factor::SourceAlpha,
                                          Bebr::GL::Blending::Factor::OneMinusSourceAlpha);
 
-    Bebr::GL::Program shaderProgram("Resources/vertex shader.glsl",
-                                    "Resources/fragment shader.glsl");
-
     float vertices[] = {
         // Position        // Color
-        0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Top
+       +0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Top-Right
+       -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Top-left
        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-left
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-right
+       +0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-right
+    };
+    std::uint32_t indices[] = {
+        0, 1, 2,
+        2, 3, 0
     };
     Bebr::System::Matrix4_t<float> position = Bebr::System::CreateIdentityMatrix<float, 4>();
-    Camera camera(0.f, 0.f, 8.f, 8.f);
+    Camera camera(0.f, 0.f, 4.f, 4.f);
+
+    Bebr::GL::Program shaderProgram("Resources/vertex shader.glsl",
+                                    "Resources/fragment shader.glsl");
 
     Bebr::GL::BufferLayout bufferLayout;
     bufferLayout.Push<float>(false, 3); // Position
@@ -125,6 +131,10 @@ int main()
     vertexBuffer.Bind();
     vertexBuffer.BufferData(vertices, sizeof(vertices));
     vertexBuffer.Unbind();
+    Bebr::GL::ElementBuffer indexBuffer;
+    indexBuffer.Bind();
+    indexBuffer.BufferData(indices, sizeof(indices));
+    indexBuffer.Unbind();
     Bebr::GL::VertexArray vertexArray;
     vertexArray.Bind();
     vertexArray.SetAttributes(vertexBuffer, bufferLayout);
@@ -150,9 +160,6 @@ int main()
         position[3][0] += offset.x;
         position[3][1] += offset.y;
 
-        if (keyboard.IsKeyPressed(Bebr::Window::Keyboard::Key::Escape))
-            PrintMatrix(position);
-
         Bebr::GL::Viewport::SetRectangle(Bebr::System::Vector2F_t(), window.GetSize());
         Bebr::GL::Renderer::Clear();
         Bebr::GL::Renderer::ClearColor();
@@ -160,7 +167,7 @@ int main()
         shaderProgram.Activate();
         shaderProgram.SetUniform("uModel", position);
         shaderProgram.SetUniform("uCamera", camera.GetMatrix());
-        Bebr::GL::Renderer::Render(vertexArray, Bebr::GL::Renderer::Mode::LineLoop, 0, 3);
+        Bebr::GL::Renderer::Render(vertexArray, indexBuffer, Bebr::GL::Renderer::Mode::Triangles, 6);
         shaderProgram.Deactivate();
 
 		window.SwapBuffers();

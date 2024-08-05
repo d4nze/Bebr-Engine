@@ -17,3 +17,12 @@ void Bebr::GL::Renderer::Render(VertexArray& vertexArray, Mode mode, std::int32_
 	glDrawArrays(static_cast<std::uint32_t>(mode), first, count);
 	vertexArray.Unbind();
 }
+
+void Bebr::GL::Renderer::Render(VertexArray& vertexArray, ElementBuffer& indexBuffer, Mode mode, std::int32_t count, const void* indices)
+{
+	vertexArray.Bind();
+	indexBuffer.Bind();
+	glDrawElements(static_cast<std::uint32_t>(mode), count, indexBuffer.GetGLType(), indices);
+	indexBuffer.Unbind();
+	vertexArray.Unbind();
+}

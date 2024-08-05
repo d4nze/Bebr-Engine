@@ -1,5 +1,6 @@
 #pragma once
 #include "VertexArray.hpp"
+#include "ElementBuffer.hpp"
 #include <System/Color.hpp>
 #include <cstdint>
 
@@ -38,6 +39,7 @@ public:
 	static void ClearColor(const System::ColorF& color = System::ColorF::black);
 
 	static void Render(VertexArray& vertexArray, Mode mode, std::int32_t first, std::int32_t count);
+	static void Render(VertexArray& vertexArray, ElementBuffer& indexBuffer, Mode mode, std::int32_t count, const void* indices = nullptr);
 };
 }
 }
