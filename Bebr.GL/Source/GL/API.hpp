@@ -1,5 +1,11 @@
 #pragma once
 
+// function.h
+// void function(int number);
+
+// function.cpp
+// void function(int number) { ... }
+
 namespace Bebr
 {
 namespace GL

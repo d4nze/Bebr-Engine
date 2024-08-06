@@ -11,14 +11,12 @@ class API
 public:
 	API() = delete;
 
-private:
+public:
 	static bool Initialize();
 	static bool IsInitialized();
 	static void Terminate();
 
 	static void PollEvents();
-
-	friend int ::main();
 };
 }
 }

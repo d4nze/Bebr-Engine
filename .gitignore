@@ -3,8 +3,9 @@
 *.vcxproj.filters
 *.vcxproj.user
 .vs/
-Bebr.Core/Build/
 Bebr.GL/Build/
+Bebr.GUI/Build/
 Bebr.System/Build/
 Bebr.Window/Build/
+ImGui/Build/
 Run/Build/

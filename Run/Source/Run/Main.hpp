@@ -1,3 +1,4 @@
 #pragma once
+#include <cstdint>
 
-int main();
+std::int32_t main();
