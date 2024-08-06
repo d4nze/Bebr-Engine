@@ -13,7 +13,12 @@
 #include <GL/Viewport.hpp>
 
 #include <GUI/API.hpp>
-#include <GUI/Configuration.hpp>
+#include <GUI/Button.hpp>
+#include <GUI/ClosableWindow.hpp>
+#include <GUI/Configurations.hpp>
+#include <GUI/Style.hpp>
+#include <GUI/Text.hpp>
+#include <GUI/Window.hpp>
 
 #include <System/Color.hpp>
 #include <System/Matrix.hpp>
@@ -21,40 +26,42 @@
 
 #include <Window/API.hpp>
 #include <Window/BasicWindow.hpp>
-#include <Window/Keyboard.hpp>
 
-int InitializeOpenGL()
+#define INIT_MODULE(initFunc) if (std::int32_t error = initFunc()) return error
+
+std::int32_t InitializeOpenGL()
 {
     Bebr::GL::API::SetExperimental(true);
     if (!Bebr::GL::API::Initialize())
     {
         Bebr::System::Logln("error initializing GLEW");
         Bebr::Window::API::Terminate();
-        return -1;
+        return ERROR;
     }
     Bebr::GL::API::SetBlending(true);
     Bebr::GL::Blending::SetBlendFunction(Bebr::GL::Blending::Factor::SourceAlpha,
                                          Bebr::GL::Blending::Factor::OneMinusSourceAlpha);
-    return 0;
+    return SUCCESS;
 }
 
-int InitializeImGui()
+std::int32_t InitializeImGui()
 {
     if (!Bebr::GUI::API::InitializeMain())
     {
         Bebr::System::Logln("error initializing ImGui");
-        return -1;
+        return ERROR;
     }
-    Bebr::GUI::Configuration::EnableFlag(Bebr::GUI::Configuration::Flag::NavEnableKeyboard);
-    Bebr::GUI::Configuration::EnableFlag(Bebr::GUI::Configuration::Flag::NavEnableGamepad);
-    Bebr::GUI::Configuration::EnableFlag(Bebr::GUI::Configuration::Flag::ViewportsEnable);
-    Bebr::GUI::Configuration::EnableFlag(Bebr::GUI::Configuration::Flag::DockingEnable);
+    Bebr::GUI::Style::SetClassicTheme();
+    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::NavEnableKeyboard);
+    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::NavEnableGamepad);
+    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::ViewportsEnable);
+    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::DockingEnable);
     if (!Bebr::GUI::API::InitializeBackend())
     {
         Bebr::System::Logln("error initializing backend for ImGui");
-        return -1;
+        return ERROR;
     }
-    return 0;
+    return SUCCESS;
 }
 
 Bebr::System::Vector2F_t CalculateOffset(Bebr::Window::Keyboard& keyboard)
@@ -63,13 +70,21 @@ Bebr::System::Vector2F_t CalculateOffset(Bebr::Window::Keyboard& keyboard)
     Bebr::System::Vector2F_t offset;
     const float speed = timer.GetDeltaTime() * 2.f;
     if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Left))
+    {
         offset.x -= speed;
+    }
     if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Right))
+    {
         offset.x += speed;
+    }
     if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Up))
+    {
         offset.y += speed;
+    }
     if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Down))
+    {
         offset.y -= speed;
+    }
     return offset;
 }
 
@@ -78,21 +93,15 @@ std::int32_t main()
     if (!Bebr::Window::API::Initialize())
     {
         Bebr::System::Logln("error initializing GLFW");
-        return -1;
+        return ERROR;
     }
 
     Bebr::Window::BasicWindow window(640, 480, "Bebra window");
     Bebr::Window::Keyboard keyboard(window);
     window.MakeCurrentContext();
 
-    if (int error = InitializeOpenGL())
-    {
-        return error;
-    }
-    if (int error = InitializeImGui())
-    {
-        return error;
-    }
+    INIT_MODULE(InitializeOpenGL);
+    INIT_MODULE(InitializeImGui);
 
     float vertices[] = {
         // Position        // Color
@@ -135,9 +144,6 @@ std::int32_t main()
         position[3][0] += offset.x;
         position[3][1] += offset.y;
 
-        Bebr::GUI::API::CreateFrame();
-        Bebr::GUI::API::DockspaceOverViewport();
-
         Bebr::GL::Viewport::SetRectangle(Bebr::System::Vector2F_t(), window.GetSize());
         Bebr::GL::Renderer::Clear();
         Bebr::GL::Renderer::ClearColor();
@@ -148,11 +154,40 @@ std::int32_t main()
         Bebr::GL::Renderer::Render(vertexArray, indexBuffer, Bebr::GL::Renderer::Mode::Triangles, 6);
         shaderProgram.Deactivate();
 
-        Bebr::GUI::API::DemoWindow();
+        Bebr::GUI::API::CreateFrame();
+        Bebr::GUI::API::DockspaceOverViewport();
+        static Bebr::GUI::ClosableWindow subwindow1("gui window");
+        static Bebr::GUI::ClosableWindow subwindow2("im window");
+        if (subwindow1.IsOpen())
+        {
+            if (subwindow1.Begin())
+            {
+                static Bebr::GUI::Button button("gui button");
+                if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Escape))
+                {
+                    button.Render(200.f, 40.f);
+                }
+                else
+                {
+                    button.Render();
+                }
+            }
+            subwindow1.End();
+        }
+        if (subwindow2.IsOpen())
+        {
+            if (subwindow2.Begin())
+            {
+                static Bebr::GUI::Text text("gui text");
+                text.Render();
+            }
+            subwindow2.End();
+        }
         Bebr::GUI::API::Render();
 
         window.SwapBuffers();
     }
 
     Bebr::Window::API::Terminate();
+    return SUCCESS;
 }

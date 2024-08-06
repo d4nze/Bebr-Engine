@@ -4,10 +4,10 @@ namespace Bebr
 {
 namespace GUI
 {
-class Configuration
+class Configurations
 {
 public:
-	Configuration() = delete;
+	Configurations() = delete;
 
 public:
     enum class Flag
