@@ -3,6 +3,7 @@
 #include <string>
 #include <System/Vector2.hpp>
 #include <System/Vector3.hpp>
+#include <System/Vector4.hpp>
 #include <System/Matrix.hpp>
 
 namespace Bebr
@@ -41,6 +42,9 @@ public:
     void SetUniform(const std::string& name, float x, float y, float z, float w);
     void SetUniform(const std::string& name, std::int32_t x, std::int32_t y, std::int32_t z, std::int32_t w);
     void SetUniform(const std::string& name, std::uint32_t x, std::uint32_t y, std::uint32_t z, std::uint32_t w);
+    void SetUniform(const std::string& name, const System::Vector4F_t& value);
+    void SetUniform(const std::string& name, const System::Vector4I_t& value);
+    void SetUniform(const std::string& name, const System::Vector4U_t& value);
 
     void SetUniform(const std::string& name, const System::Matrix2_t<float>& matrix);
     void SetUniform(const std::string& name, const System::Matrix2x3_t<float>& matrix);

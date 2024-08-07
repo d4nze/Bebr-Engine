@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector4.hpp"
 #include <cstdint>
 
 namespace Bebr
@@ -15,6 +16,8 @@ struct ColorU
 	ColorU(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a = 0xFF);
 	ColorU(const ColorF& colorF);
 	ColorU(const ColorU&) = default;
+
+	inline operator Vector4<std::uint8_t>() const { return Vector4<std::uint8_t>(r, g, b, a); }
 
 	static const ColorU black;
 	static const ColorU white;
@@ -35,6 +38,8 @@ struct ColorF
 	ColorF(float r, float g, float b, float a = 1.f);
 	ColorF(const ColorU& colorU);
 	ColorF(const ColorF&) = default;
+
+	inline operator Vector4F_t() const { return Vector4<std::uint8_t>(r, g, b, a); }
 
 	static const ColorF black;
 	static const ColorF white;

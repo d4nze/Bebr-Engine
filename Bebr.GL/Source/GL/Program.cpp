@@ -171,6 +171,21 @@ void Bebr::GL::Program::SetUniform(const std::string& name, std::uint32_t x, std
     glUniform4ui(GetUniformLocation(name), x, y, z, w);
 }
 
+void Bebr::GL::Program::SetUniform(const std::string& name, const System::Vector4F_t& value)
+{
+    glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
+}
+
+void Bebr::GL::Program::SetUniform(const std::string & name, const System::Vector4I_t & value)
+{
+    glUniform4i(GetUniformLocation(name), value.x, value.y, value.z, value.w);
+}
+
+void Bebr::GL::Program::SetUniform(const std::string & name, const System::Vector4U_t & value)
+{
+    glUniform4ui(GetUniformLocation(name), value.x, value.y, value.z, value.w);
+}
+
 void Bebr::GL::Program::SetUniform(const std::string& name, const System::Matrix2_t<float>& matrix)
 {
     glUniformMatrix2fv(GetUniformLocation(name), 1, GL_TRUE, matrix.GetData());

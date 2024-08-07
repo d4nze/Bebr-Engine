@@ -13,9 +13,9 @@ void Bebr::GL::VertexBuffer::Unbind()
 	#endif
 }
 
-void Bebr::GL::VertexBuffer::BufferData(const void* data, Size_t size)
+void Bebr::GL::VertexBuffer::BufferData(const void* data, Size_t size, DataUsage usage)
 {
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, data, static_cast<std::uint32_t>(usage));
 }
 
 void Bebr::GL::VertexBuffer::BufferSubData(const void* data, Size_t size, Size_t offset)

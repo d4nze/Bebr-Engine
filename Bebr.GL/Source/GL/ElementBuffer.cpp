@@ -1,9 +1,9 @@
 #include "ElementBuffer.hpp"
 #include <GL/glew.h>
 
-static void BufferData(void* data, Bebr::GL::Size_t size)
+static void BufferData(void* data, Bebr::GL::Size_t size, Bebr::GL::DataUsage usage)
 {
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, static_cast<std::uint32_t>(usage));
 }
 
 static void BufferSubData(void* data, Bebr::GL::Size_t size, Bebr::GL::Size_t start)
@@ -34,24 +34,24 @@ std::uint32_t Bebr::GL::ElementBuffer::GetGLType() const
 }
 
 template<>
-void Bebr::GL::ElementBuffer::BufferData<std::uint8_t>(std::uint8_t* data, Size_t size)
+void Bebr::GL::ElementBuffer::BufferData<std::uint8_t>(std::uint8_t* data, Size_t size, DataUsage usage)
 {
 	m_glType = GL_UNSIGNED_BYTE;
-	::BufferData(data, size);
+	::BufferData(data, size, usage);
 }
 
 template<>
-void Bebr::GL::ElementBuffer::BufferData<std::uint16_t>(std::uint16_t* data, Size_t size)
+void Bebr::GL::ElementBuffer::BufferData<std::uint16_t>(std::uint16_t* data, Size_t size, DataUsage usage)
 {
 	m_glType = GL_UNSIGNED_SHORT;
-	::BufferData(data, size);
+	::BufferData(data, size, usage);
 }
 
 template<>
-void Bebr::GL::ElementBuffer::BufferData<std::uint32_t>(std::uint32_t* data, Size_t size)
+void Bebr::GL::ElementBuffer::BufferData<std::uint32_t>(std::uint32_t* data, Size_t size, DataUsage usage)
 {
 	m_glType = GL_UNSIGNED_INT;
-	::BufferData(data, size);
+	::BufferData(data, size, usage);
 }
 
 template<>

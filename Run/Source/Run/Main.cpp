@@ -2,12 +2,16 @@
 #include "Camera.hpp"
 #include "Timer.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <STB/stb_image.h>
+
 #include <GL/API.hpp>
 #include <GL/Blending.hpp>
 #include <GL/BufferLayout.hpp>
 #include <GL/ElementBuffer.hpp>
 #include <GL/Program.hpp>
 #include <GL/Renderer.hpp>
+#include <GL/Texture.hpp>
 #include <GL/VertexArray.hpp>
 #include <GL/VertexBuffer.hpp>
 #include <GL/Viewport.hpp>
@@ -44,48 +48,27 @@ std::int32_t InitializeOpenGL()
     return SUCCESS;
 }
 
-std::int32_t InitializeImGui()
+void InitializeTexture(Bebr::GL::Texture& texture)
 {
-    if (!Bebr::GUI::API::InitializeMain())
-    {
-        Bebr::System::Logln("error initializing ImGui");
-        return ERROR;
-    }
-    Bebr::GUI::Style::SetClassicTheme();
-    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::NavEnableKeyboard);
-    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::NavEnableGamepad);
-    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::ViewportsEnable);
-    Bebr::GUI::Configurations::EnableFlag(Bebr::GUI::Configurations::Flag::DockingEnable);
-    if (!Bebr::GUI::API::InitializeBackend())
-    {
-        Bebr::System::Logln("error initializing backend for ImGui");
-        return ERROR;
-    }
-    return SUCCESS;
-}
+    stbi_set_flip_vertically_on_load(1);
+    int width, height, colors;
+    const std::uint8_t* data = stbi_load("Resources/image.jpg", &width, &height, &colors, 4);
 
-Bebr::System::Vector2F_t CalculateOffset(Bebr::Window::Keyboard& keyboard)
-{
-    static Timer timer;
-    Bebr::System::Vector2F_t offset;
-    const float speed = timer.GetDeltaTime() * 2.f;
-    if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Left))
+    texture.Bind();
+    texture.SetMinFilter(Bebr::GL::Texture::Filter::Linear);
+    texture.SetMagFilter(Bebr::GL::Texture::Filter::Linear);
+    texture.SetWrapX(Bebr::GL::Texture::Wrap::Repeat);
+    texture.SetWrapY(Bebr::GL::Texture::Wrap::Repeat);
+    texture.Create(0, width, height,
+                   Bebr::GL::Texture::InternalFormat::RGBA8,
+                   Bebr::GL::Texture::Format::RGBA, data);
+    texture.Unbind();
+
+    delete (void*)nullptr;
+    if (data != nullptr)
     {
-        offset.x -= speed;
+        stbi_image_free(const_cast<std::uint8_t*>(data));
     }
-    if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Right))
-    {
-        offset.x += speed;
-    }
-    if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Up))
-    {
-        offset.y += speed;
-    }
-    if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Down))
-    {
-        offset.y -= speed;
-    }
-    return offset;
 }
 
 std::int32_t main()
@@ -96,19 +79,17 @@ std::int32_t main()
         return ERROR;
     }
 
-    Bebr::Window::BasicWindow window(640, 480, "Bebra window");
-    Bebr::Window::Keyboard keyboard(window);
+    Bebr::Window::BasicWindow window(640, 640, "Bebra window");
     window.MakeCurrentContext();
 
     INIT_MODULE(InitializeOpenGL);
-    INIT_MODULE(InitializeImGui);
 
     float vertices[] = {
-        // Position        // Color
-       +0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Top-Right
-       -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Top-left
-       -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-left
-       +0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, // Bottom-right
+        // Position        // Color               // Tex Coords
+       +0.5f, +0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.f, 1.0f, 1.0f, // Top-Right
+       -0.5f, +0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.f, 0.0f, 1.0f, // Top-left
+       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.f, 0.0f, 0.0f, // Bottom-left
+       +0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.f, 1.0f, 0.0f, // Bottom-right
     };
     std::uint32_t indices[] = {
         0, 1, 2,
@@ -120,8 +101,9 @@ std::int32_t main()
     Bebr::GL::Program shaderProgram("Resources/vertex shader.glsl",
                                     "Resources/fragment shader.glsl");
     Bebr::GL::BufferLayout bufferLayout;
-    bufferLayout.Push<float>(false, 3); // Position
-    bufferLayout.Push<float>(false, 4); // Color
+    bufferLayout.Push<float>(false, 3); // aPosition
+    bufferLayout.Push<float>(false, 4); // aColor
+    bufferLayout.Push<float>(false, 2); // aTexCoords
     Bebr::GL::VertexBuffer vertexBuffer;
     vertexBuffer.Bind();
     vertexBuffer.BufferData(vertices, sizeof(vertices));
@@ -134,56 +116,25 @@ std::int32_t main()
     vertexArray.Bind();
     vertexArray.SetAttributes(vertexBuffer, bufferLayout);
     vertexArray.Unbind();
+    Bebr::GL::Texture texture;
+    InitializeTexture(texture);
 
     while (window.IsOpen())
     {
         Bebr::Window::API::PollEvents();
-        keyboard.Update();
-
-        Bebr::System::Vector2F_t offset = CalculateOffset(keyboard);
-        position[3][0] += offset.x;
-        position[3][1] += offset.y;
 
         Bebr::GL::Viewport::SetRectangle(Bebr::System::Vector2F_t(), window.GetSize());
         Bebr::GL::Renderer::Clear();
         Bebr::GL::Renderer::ClearColor();
 
         shaderProgram.Activate();
+        texture.Bind();
         shaderProgram.SetUniform("uModel", position);
         shaderProgram.SetUniform("uCamera", camera.GetMatrix());
+        shaderProgram.SetUniform("uTexture", 0);
         Bebr::GL::Renderer::Render(vertexArray, indexBuffer, Bebr::GL::Renderer::Mode::Triangles, 6);
+        texture.Unbind();
         shaderProgram.Deactivate();
-
-        Bebr::GUI::API::CreateFrame();
-        Bebr::GUI::API::DockspaceOverViewport();
-        static Bebr::GUI::ClosableWindow subwindow1("gui window");
-        static Bebr::GUI::ClosableWindow subwindow2("im window");
-        if (subwindow1.IsOpen())
-        {
-            if (subwindow1.Begin())
-            {
-                static Bebr::GUI::Button button("gui button");
-                if (keyboard.IsKeyDown(Bebr::Window::Keyboard::Key::Escape))
-                {
-                    button.Render(200.f, 40.f);
-                }
-                else
-                {
-                    button.Render();
-                }
-            }
-            subwindow1.End();
-        }
-        if (subwindow2.IsOpen())
-        {
-            if (subwindow2.Begin())
-            {
-                static Bebr::GUI::Text text("gui text");
-                text.Render();
-            }
-            subwindow2.End();
-        }
-        Bebr::GUI::API::Render();
 
         window.SwapBuffers();
     }
