@@ -3,12 +3,17 @@
 
 void Bebr::GL::Renderer::Clear()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Bebr::GL::Renderer::ClearColor(const System::ColorF & color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
+}
+
+void Bebr::GL::Renderer::RenderBuffers(const FrameBuffer::Attachment* buffers, std::int32_t count)
+{
+	glDrawBuffers(count, (std::uint32_t*)(buffers));
 }
 
 void Bebr::GL::Renderer::Render(VertexArray& vertexArray, Mode mode, std::int32_t first, std::int32_t count)

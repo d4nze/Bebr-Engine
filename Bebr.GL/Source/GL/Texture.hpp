@@ -1,4 +1,5 @@
 #pragma once
+#include "PixelFormat.hpp"
 #include "Resource.hpp"
 #include <System/Vector2.hpp>
 
@@ -9,11 +10,21 @@ namespace GL
 class Texture : public Resource
 {
 public:
-	Texture();
-	Texture(const Texture&) = default;
-	~Texture();
+	enum class Target
+	{
+		Texture1D					= 0x0DE0,
+		Texture2D					= 0x0DE1,
+		Texture3D					= 0x806F,
+		Texture1DArray				= 0x8C18,
+		Texture2DArray				= 0x8C1A,
+		TextureRectangle			= 0x84F5,
+		TextureCubeMap				= 0x8513,
+		TextureCubeMapArray			= 0x9009,
+		TextureBuffer				= 0x8C2A,
+		Texture2DMultisample		= 0x9100,
+		Texture2DMultisampleArray	= 0x9102
+	};
 
-public:
 	enum class InternalFormat
 	{
 		R8				= 0x8229,
@@ -62,11 +73,16 @@ public:
 	};
 
 public:
+	Texture(Target target = Target::Texture2D);
+	Texture(const Texture&) = default;
+	~Texture();
+
+public:
 	void Bind(std::uint32_t unit = 0);
 	void Unbind();
 
 	void Create(std::int32_t level, std::int32_t width, std::int32_t height,
-				InternalFormat internalFormat, Format format, const std::uint8_t* pixels = nullptr);
+				PixelFormat internalFormat, PixelFormat format, const std::uint8_t* pixels = nullptr);
 
 	void SetMinFilter(Filter filter);
 	void SetMagFilter(Filter filter);
@@ -79,10 +95,10 @@ public:
 	Wrap GetWrapX() const;
 	Wrap GetWrapY() const;
 
-	const System::Vector2I_t& GetSize() const;
+	Target GetTarget() const;
 
 private:
-	System::Vector2I_t m_size;
+	Target m_target;
 };
 }
 }

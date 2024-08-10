@@ -282,8 +282,7 @@ project "Run"
 		"Bebr.GL/Source",
 		"Bebr.GUI/Source",
 		"Bebr.System/Source",
-		"Bebr.Window/Source",
-        "Libraries/STB/include"
+		"Bebr.Window/Source"
     }
     links
     {
