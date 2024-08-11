@@ -54,5 +54,21 @@ protected:
 	std::string m_name;
     std::int32_t m_flags;
 };
+
+class ClosableWindow : public Window
+{
+public:
+    ClosableWindow(const std::string& name, bool open = true);
+    ClosableWindow(const ClosableWindow&) = default;
+    ~ClosableWindow() = default;
+
+public:
+    bool Begin();
+
+    bool IsOpen() const;
+
+private:
+    bool m_open;
+};
 }
 }

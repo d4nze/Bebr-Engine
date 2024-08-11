@@ -6,7 +6,7 @@ void Bebr::GL::Renderer::Clear()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Bebr::GL::Renderer::ClearColor(const System::ColorF & color)
+void Bebr::GL::Renderer::ClearColor(const System::ColorF& color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
 }

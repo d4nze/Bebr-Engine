@@ -2,6 +2,18 @@
 #include <unordered_map>
 #include <glfw3.h>
 
+Bebr::Window::BasicWindow::BasicWindow(const std::string& title) : m_title(title)
+{
+	m_handler = glfwCreateWindow(640, 640,
+								 m_title.c_str(),
+								 nullptr, nullptr);
+	glfwMaximizeWindow(m_handler);
+	InitializeCallbacks();
+	glfwGetWindowPos(m_handler, &m_position.x, &m_position.y);
+	glfwGetWindowSize(m_handler, &m_size.x, &m_size.y);
+	MakeCurrentContext();
+}
+
 Bebr::Window::BasicWindow::BasicWindow(int width, int height, const std::string& title) : m_title(title)
 {
 	m_handler = glfwCreateWindow(width, height,
@@ -10,6 +22,7 @@ Bebr::Window::BasicWindow::BasicWindow(int width, int height, const std::string&
 	InitializeCallbacks();
 	glfwGetWindowPos(m_handler, &m_position.x, &m_position.y);
 	glfwGetWindowSize(m_handler, &m_size.x, &m_size.y);
+	MakeCurrentContext();
 }
 
 Bebr::Window::BasicWindow::BasicWindow(const System::Vector2I_t& size, const std::string& title) : m_title(title)
@@ -19,6 +32,8 @@ Bebr::Window::BasicWindow::BasicWindow(const System::Vector2I_t& size, const std
 								 nullptr, nullptr);
 	InitializeCallbacks();
 	glfwGetWindowPos(m_handler, &m_position.x, &m_position.y);
+	glfwGetWindowSize(m_handler, &m_size.x, &m_size.y);
+	MakeCurrentContext();
 }
 
 Bebr::Window::BasicWindow::~BasicWindow()

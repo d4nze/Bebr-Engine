@@ -13,6 +13,110 @@ workspace "Bebr Engine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.platform}"
 
+project "Bebr.Core"
+	language "C++"
+    kind "StaticLib"
+    
+	location "%{prj.name}/Source/"
+	targetdir "%{prj.name}/Build/bin/%{outputdir}/%{prj.name}"
+    objdir "%{prj.name}/Build/obj/%{outputdir}/%{prj.name}"
+
+	files
+	{
+		"%{prj.name}/Source/**.hpp",
+		"%{prj.name}/Source/**.inl",
+		"%{prj.name}/Source/**.cpp",
+		"%{prj.name}/Source/**.glsl"
+	}
+    
+    vpaths
+    {
+      ["Include"] = { "../**.hpp", "../**.inl" },
+      ["Source"] = { "../**.cpp" },
+      ["Shaders"] = { "../**.glsl" }
+    }
+    
+    includedirs
+    {
+        "%{prj.name}/Source",
+		"Bebr.GL/Source",
+		"Bebr.GUI/Source",
+		"Bebr.System/Source",
+		"Bebr.Window/Source"
+    }
+    links
+    {
+		"Bebr.System",
+		"Bebr.Window",
+        "Bebr.GL",
+        "Bebr.GUI"
+    }
+	
+	filter "platforms:Win32"
+		architecture "x86"
+        defines "WIN32"
+        postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x86\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
+	filter "platforms:Win64"
+		architecture "x86_64"
+        defines "WIN64"
+        postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x64\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
+	filter "configurations:Debug"
+        symbols "On"
+        defines "DEBUG"
+	filter "configurations:Release"
+        optimize "On"
+        defines "RELEASE"
+
+project "Bebr.Engine"
+	language "C++"
+    kind "StaticLib"
+    
+	location "%{prj.name}/Source/"
+	targetdir "%{prj.name}/Build/bin/%{outputdir}/%{prj.name}"
+    objdir "%{prj.name}/Build/obj/%{outputdir}/%{prj.name}"
+
+	files
+	{
+		"%{prj.name}/Source/**.hpp",
+		"%{prj.name}/Source/**.inl",
+		"%{prj.name}/Source/**.cpp"
+	}
+    
+    vpaths
+    {
+      ["Include"] = { "../**.hpp", "../**.inl" },
+      ["Source"] = { "../**.cpp" }
+    }
+    
+    includedirs
+    {
+        "%{prj.name}/Source",
+		"Bebr.Core/Source",
+		"Bebr.GL/Source",
+		"Bebr.GUI/Source",
+		"Bebr.System/Source",
+		"Bebr.Window/Source"
+    }
+    links
+    {
+		"Bebr.Core"
+    }
+	
+	filter "platforms:Win32"
+		architecture "x86"
+        defines "WIN32"
+        postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x86\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
+	filter "platforms:Win64"
+		architecture "x86_64"
+        defines "WIN64"
+        postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x64\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
+	filter "configurations:Debug"
+        symbols "On"
+        defines "DEBUG"
+	filter "configurations:Release"
+        optimize "On"
+        defines "RELEASE"
+
 project "Bebr.GL"
     kind "StaticLib"
     language "C++"
@@ -279,28 +383,22 @@ project "Run"
     includedirs
     {
         "%{prj.name}/Source",
+		"Bebr.Core/Source",
 		"Bebr.GL/Source",
 		"Bebr.GUI/Source",
 		"Bebr.System/Source",
-		"Bebr.Window/Source"
+		"Bebr.Window/Source",
+		"Bebr.Engine/Source"
     }
-    links
-    {
-		"Bebr.System",
-		"Bebr.Window",
-        "Bebr.GL",
-        "Bebr.GUI"
-    }
+    links "Bebr.Engine"
 	
 	filter "platforms:Win32"
 		architecture "x86"
         defines "WIN32"
-        libdirs { "Libraries/GLEW/x86/lib" }
         postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x86\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
 	filter "platforms:Win64"
 		architecture "x86_64"
         defines "WIN64"
-        libdirs { "Libraries/GLEW/x64/lib" }
         postbuildcommands { "copy /B /Y \"%{wks.location}Libraries\\GLEW\\x64\\bin\\glew32.dll\" \"%{cfg.targetdir}\"" }
 	filter "configurations:Debug"
         symbols "On"

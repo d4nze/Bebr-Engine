@@ -30,3 +30,18 @@ const std::string& Bebr::GUI::Window::GetName() const
 {
     return m_name;
 }
+
+Bebr::GUI::ClosableWindow::ClosableWindow(const std::string& name, bool open)
+    : Window(name)
+    , m_open(open)
+{}
+
+bool Bebr::GUI::ClosableWindow::Begin()
+{
+    return ImGui::Begin(m_name.c_str(), &m_open, m_flags);
+}
+
+bool Bebr::GUI::ClosableWindow::IsOpen() const
+{
+    return m_open;
+}

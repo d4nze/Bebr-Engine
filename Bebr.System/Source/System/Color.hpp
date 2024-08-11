@@ -39,7 +39,7 @@ struct ColorF
 	ColorF(const ColorU& colorU);
 	ColorF(const ColorF&) = default;
 
-	inline operator Vector4F_t() const { return Vector4<std::uint8_t>(r, g, b, a); }
+	inline operator Vector4F_t() const { return Vector4F_t(r, g, b, a); }
 
 	static const ColorF black;
 	static const ColorF white;

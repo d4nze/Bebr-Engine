@@ -11,6 +11,7 @@ namespace Window
 class BasicWindow
 {
 public:
+	BasicWindow(const std::string& title);
 	BasicWindow(int width, int height, const std::string& title);
 	BasicWindow(const System::Vector2I_t& size, const std::string& title);
 	~BasicWindow();
