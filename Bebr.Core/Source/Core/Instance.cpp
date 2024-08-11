@@ -6,6 +6,11 @@ Bebr::Core::Instance::Instance(Scene& scene, InstanceLayer& layer, const std::st
     , m_layer       (&layer)
 {}
 
+void Bebr::Core::Instance::SetName(const std::string& name)
+{
+    m_name = name;
+}
+
 const std::string& Bebr::Core::Instance::GetName() const
 {
     return m_name;

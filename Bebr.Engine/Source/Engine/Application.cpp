@@ -11,7 +11,8 @@ Bebr::Engine::Application::Application()
 	, m_guiInitialize	()
 
 	, m_mainMenuBar		()
-	, m_hierarchy		()
+	, m_sceneHierarchy	()
+	, m_inspector		()
 {}
 
 bool Bebr::Engine::Application::IsRunning() const
@@ -22,6 +23,11 @@ bool Bebr::Engine::Application::IsRunning() const
 void Bebr::Engine::Application::Update()
 {
 	Bebr::Window::API::PollEvents();
+
+	if (m_sceneHierarchy.IsUpdated())
+	{
+		m_inspector.SetInspectable(m_sceneHierarchy.GetInspectable());
+	}
 }
 
 void Bebr::Engine::Application::Render()
@@ -32,9 +38,15 @@ void Bebr::Engine::Application::Render()
 
 	Bebr::GUI::API::CreateFrame();
 	Bebr::GUI::API::DockspaceOverViewport();
-	m_mainMenuBar.Render();
-	m_hierarchy.Render();
+	RenderGUI();
 	Bebr::GUI::API::Render();
 
 	m_window.SwapBuffers();
+}
+
+void Bebr::Engine::Application::RenderGUI()
+{
+	m_mainMenuBar.Render();
+	m_sceneHierarchy.Render();
+	m_inspector.Render();
 }

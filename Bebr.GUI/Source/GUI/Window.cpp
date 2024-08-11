@@ -26,6 +26,12 @@ void Bebr::GUI::Window::RemoveFlag(Flag flag)
     m_flags &= ~static_cast<std::int32_t>(flag);
 }
 
+Bebr::System::Vector2F_t Bebr::GUI::Window::GetSize() const
+{
+    ImVec2 size = ImGui::GetWindowSize();
+    return System::Vector2F_t(size.x, size.y);
+}
+
 const std::string& Bebr::GUI::Window::GetName() const
 {
     return m_name;

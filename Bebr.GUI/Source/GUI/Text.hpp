@@ -1,4 +1,5 @@
 #pragma once
+#include <System/Vector2.hpp>
 #include <string>
 
 namespace Bebr
@@ -14,6 +15,8 @@ public:
 
 public:
 	void Render();
+
+	System::Vector2F_t GetSize() const;
 
 private:
 	std::string m_data;

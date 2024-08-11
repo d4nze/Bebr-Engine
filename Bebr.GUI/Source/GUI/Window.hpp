@@ -1,4 +1,5 @@
 #pragma once
+#include <System/Vector2.hpp>
 #include <string>
 
 namespace Bebr
@@ -47,6 +48,8 @@ public:
 
     void AddFlag(Flag flag);
     void RemoveFlag(Flag flag);
+
+    System::Vector2F_t GetSize() const;
 
     const std::string& GetName() const;
 

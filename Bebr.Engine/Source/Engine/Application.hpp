@@ -1,8 +1,9 @@
 #pragma once
 #include "Initializer.hpp"
-#include <Window/BasicWindow.hpp>
 #include "MainMenuBar.hpp"
-#include "Hierarchy.hpp"
+#include "SceneHierarchy.hpp"
+#include "Inspector.hpp"
+#include <Window/BasicWindow.hpp>
 
 namespace Bebr
 {
@@ -20,13 +21,17 @@ public:
 	void Render();
 
 private:
+	void RenderGUI();
+
+private:
 	GLFWInitializer				m_glfwInitializer;
 	Bebr::Window::BasicWindow	m_window;
 	GLInitializer				m_glInitializer;
 	GUIInitializer				m_guiInitialize;
 
 	MainMenuBar					m_mainMenuBar;
-	Hierarchy					m_hierarchy;
+	SceneHierarchy				m_sceneHierarchy;
+	Inspector					m_inspector;
 };
 }
 }
