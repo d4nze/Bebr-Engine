@@ -3,6 +3,7 @@
 #include "MainMenuBar.hpp"
 #include "SceneHierarchy.hpp"
 #include "Inspector.hpp"
+#include "ResourcesFolder.hpp"
 #include <Window/BasicWindow.hpp>
 
 namespace Bebr
@@ -32,6 +33,7 @@ private:
 	MainMenuBar					m_mainMenuBar;
 	SceneHierarchy				m_sceneHierarchy;
 	Inspector					m_inspector;
+	ResourcesFolder				m_resources;
 };
 }
 }

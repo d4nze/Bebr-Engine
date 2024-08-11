@@ -70,6 +70,7 @@ project "Bebr.Core"
 project "Bebr.Engine"
 	language "C++"
     kind "StaticLib"
+    cppdialect "C++17"
     
 	location "%{prj.name}/Source/"
 	targetdir "%{prj.name}/Build/bin/%{outputdir}/%{prj.name}"
@@ -360,6 +361,7 @@ project "ImGui"
 
 project "Run"
 	language "C++"
+    cppdialect "C++17"
     
 	location "%{prj.name}/Source/"
 	targetdir "%{prj.name}/Build/bin/%{outputdir}/%{prj.name}"

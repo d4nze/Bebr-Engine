@@ -13,6 +13,7 @@ Bebr::Engine::Application::Application()
 	, m_mainMenuBar		()
 	, m_sceneHierarchy	()
 	, m_inspector		()
+	, m_resources		()
 {}
 
 bool Bebr::Engine::Application::IsRunning() const
@@ -49,4 +50,5 @@ void Bebr::Engine::Application::RenderGUI()
 	m_mainMenuBar.Render();
 	m_sceneHierarchy.Render();
 	m_inspector.Render();
+	m_resources.Render();
 }

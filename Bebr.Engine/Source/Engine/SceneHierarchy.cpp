@@ -21,54 +21,16 @@ Bebr::Engine::SceneHierarchy::SceneHierarchy()
 void Bebr::Engine::SceneHierarchy::Render()
 {
 	m_updated = false;
-	if (Begin())
+	if (!Begin())
 	{
-		for (Core::Scene::LayerHandler handler : m_scene)
+		End();
+		return;
+	}
+	for (Core::Scene::LayerHandler handler : m_scene)
+	{
+		if (handler.type == Core::Scene::LayerType::Instance)
 		{
-			if (handler.type == Core::Scene::LayerType::Instance)
-			{
-				Core::InstanceLayer& instanceLayer = *reinterpret_cast<Core::InstanceLayer*>(handler.layer);
-				GUI::TreeNode layerNode(instanceLayer.GetName());
-				layerNode.AddFlag(GUI::TreeNode::Flag::OpenOnArrow);
-				layerNode.AddFlag(GUI::TreeNode::Flag::OpenOnDoubleClick);
-				if (instanceLayer.GetSize() == 0)
-				{
-					layerNode.AddFlag(GUI::TreeNode::Flag::Bullet);
-				}
-				if (&instanceLayer == m_selected)
-				{
-					layerNode.AddFlag(GUI::TreeNode::Flag::Selected);
-				}
-				if (layerNode.Begin())
-				{
-					for (Core::Instance* instance : instanceLayer)
-					{
-						GUI::TreeNode instanceNode(instance->GetName());
-						instanceNode.AddFlag(GUI::TreeNode::Flag::Bullet);
-						if (instance == m_selected)
-						{
-							instanceNode.AddFlag(GUI::TreeNode::Flag::Selected);
-						}
-						if (instanceNode.Begin())
-						{
-							instanceNode.End();
-						}
-						if (instanceNode.IsClicked())
-						{
-							m_selected = instance;
-							m_updated = true;
-							m_inspectable = Inspectable(Inspectable::Type::Instance, instance);
-						}
-					}
-					layerNode.End();
-				}
-				if (layerNode.IsClicked())
-				{
-					m_selected = &instanceLayer;
-					m_updated = true;
-					m_inspectable = Inspectable(Inspectable::Type::InstanceLayer, &instanceLayer);
-				}
-			}
+			RenderInstanceLayer(*reinterpret_cast<Core::InstanceLayer*>(handler.layer));
 		}
 	}
 	End();
@@ -82,4 +44,60 @@ bool Bebr::Engine::SceneHierarchy::IsUpdated() const
 Bebr::Engine::Inspectable Bebr::Engine::SceneHierarchy::GetInspectable() const
 {
 	return m_inspectable;
+}
+
+void Bebr::Engine::SceneHierarchy::RenderInstanceLayer(Core::InstanceLayer& instanceLayer)
+{
+	GUI::TreeNode layerNode(instanceLayer.GetName());
+	layerNode.AddFlag(GUI::TreeNode::Flag::OpenOnArrow);
+	layerNode.AddFlag(GUI::TreeNode::Flag::OpenOnDoubleClick);
+	if (instanceLayer.GetSize() == 0)
+	{
+		layerNode.AddFlag(GUI::TreeNode::Flag::Bullet);
+	}
+	if (&instanceLayer == m_selected)
+	{
+		layerNode.AddFlag(GUI::TreeNode::Flag::Selected);
+	}
+
+	if (layerNode.Begin())
+	{
+		if (layerNode.IsClicked())
+		{
+			m_selected = &instanceLayer;
+			m_updated = true;
+			m_inspectable = Inspectable(Inspectable::Type::InstanceLayer, &instanceLayer);
+		}
+		for (Core::Instance* instance : instanceLayer)
+		{
+			RenderInstance(*instance);
+		}
+		layerNode.End();
+	}
+	else if (layerNode.IsClicked())
+	{
+		m_selected = &instanceLayer;
+		m_updated = true;
+		m_inspectable = Inspectable(Inspectable::Type::InstanceLayer, &instanceLayer);
+	}
+}
+
+void Bebr::Engine::SceneHierarchy::RenderInstance(Core::Instance& instance)
+{
+	GUI::TreeNode instanceNode(instance.GetName());
+	instanceNode.AddFlag(GUI::TreeNode::Flag::Bullet);
+	if (&instance == m_selected)
+	{
+		instanceNode.AddFlag(GUI::TreeNode::Flag::Selected);
+	}
+	if (instanceNode.Begin())
+	{
+		instanceNode.End();
+	}
+	if (instanceNode.IsClicked())
+	{
+		m_selected = &instance;
+		m_updated = true;
+		m_inspectable = Inspectable(Inspectable::Type::Instance, &instance);
+	}
 }

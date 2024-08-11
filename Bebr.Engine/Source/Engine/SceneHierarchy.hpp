@@ -22,6 +22,10 @@ public:
 	Inspectable GetInspectable()	const;
 
 private:
+	void RenderInstanceLayer(Core::InstanceLayer& instanceLayer);
+	void RenderInstance(Core::Instance& instance);
+
+private:
 	bool		m_updated;
 	void*		m_selected;
 	Inspectable m_inspectable;
