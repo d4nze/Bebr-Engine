@@ -13,6 +13,9 @@ public:
 	static void SetLightTheme();
 	static void SetDarkTheme();
 	static void SetClassicTheme();
+
+	static void BeginDisabled(bool disabled = true);
+	static void EndDisabled();
 };
 }
 }

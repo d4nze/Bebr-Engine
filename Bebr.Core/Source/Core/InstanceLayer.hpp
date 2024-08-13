@@ -39,6 +39,8 @@ private:
 private:
 	std::vector<Instance*>	m_instances;
 	std::queue<Instance*>	m_removes;
+
+	friend Instance;
 };
 }
 }

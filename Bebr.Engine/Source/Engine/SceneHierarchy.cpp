@@ -1,6 +1,8 @@
 #include "SceneHierarchy.hpp"
+#include <GUI/DragDrop.hpp>
 #include <GUI/TreeNode.hpp>
 #include <GUI/Text.hpp>
+#include <System/Log.hpp>
 
 Bebr::Engine::SceneHierarchy::SceneHierarchy()
 	: ClosableWindow("Scene hierarchy")
@@ -34,6 +36,13 @@ void Bebr::Engine::SceneHierarchy::Render()
 		}
 	}
 	End();
+
+	while (!m_instancesDrag.empty())
+	{
+		auto pair = m_instancesDrag.front();
+		m_instancesDrag.pop();
+		pair.first->SetLayer(*pair.second);
+	}
 }
 
 bool Bebr::Engine::SceneHierarchy::IsUpdated() const
@@ -51,6 +60,7 @@ void Bebr::Engine::SceneHierarchy::RenderInstanceLayer(Core::InstanceLayer& inst
 	GUI::TreeNode layerNode(instanceLayer.GetName());
 	layerNode.AddFlag(GUI::TreeNode::Flag::OpenOnArrow);
 	layerNode.AddFlag(GUI::TreeNode::Flag::OpenOnDoubleClick);
+	layerNode.AddFlag(GUI::TreeNode::Flag::DefaultOpen);
 	if (instanceLayer.GetSize() == 0)
 	{
 		layerNode.AddFlag(GUI::TreeNode::Flag::Bullet);
@@ -62,6 +72,7 @@ void Bebr::Engine::SceneHierarchy::RenderInstanceLayer(Core::InstanceLayer& inst
 
 	if (layerNode.Begin())
 	{
+		InstanceLayerTarget(instanceLayer);
 		if (layerNode.IsClicked())
 		{
 			m_selected = &instanceLayer;
@@ -79,6 +90,10 @@ void Bebr::Engine::SceneHierarchy::RenderInstanceLayer(Core::InstanceLayer& inst
 		m_selected = &instanceLayer;
 		m_updated = true;
 		m_inspectable = Inspectable(Inspectable::Type::InstanceLayer, &instanceLayer);
+	}
+	else
+	{
+		InstanceLayerTarget(instanceLayer);
 	}
 }
 
@@ -99,5 +114,27 @@ void Bebr::Engine::SceneHierarchy::RenderInstance(Core::Instance& instance)
 		m_selected = &instance;
 		m_updated = true;
 		m_inspectable = Inspectable(Inspectable::Type::Instance, &instance);
+	}
+
+	GUI::DragDrop::Source source;
+	if (source.Begin())
+	{
+		GUI::Text sourceText(instance.GetName());
+		sourceText.Render();
+		source.SetPayload<Core::Instance*>("instance ref", &instance);
+		source.End();
+	}
+}
+
+void Bebr::Engine::SceneHierarchy::InstanceLayerTarget(Core::InstanceLayer& instanceLayer)
+{
+	GUI::DragDrop::Target target;
+	if (target.Begin())
+	{
+		if (Core::Instance* instance = target.AcceptPayload<Core::Instance*>("instance ref"))
+		{
+			this->m_instancesDrag.push({ instance, &instanceLayer });
+		}
+		target.End();
 	}
 }

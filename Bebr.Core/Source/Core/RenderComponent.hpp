@@ -1,6 +1,5 @@
 #pragma once
-#include "Instance.hpp"
-#include "SceneCarrier.hpp"
+#include "Component.hpp"
 
 namespace Bebr
 {
@@ -8,7 +7,7 @@ namespace Core
 {
 class RenderTarget;
 
-class RenderComponent : public SceneCarrier
+class RenderComponent : public Component
 {
 public:
 	RenderComponent(Instance& instance, Scene& scene);
@@ -18,10 +17,11 @@ public:
 public:
 	virtual void Render(RenderTarget& renderTarget) = 0;
 
-	Instance& GetInstance() const;
+	void SetRenderPriority(std::int32_t priority);
+	std::int32_t GetRenderPriority() const;
 
 private:
-	Instance& m_instance;
+	std::int32_t m_priority;
 };
 }
 }

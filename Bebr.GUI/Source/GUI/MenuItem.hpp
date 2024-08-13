@@ -1,11 +1,12 @@
 #pragma once
+#include "Item.hpp"
 #include <string>
 
 namespace Bebr
 {
 namespace GUI
 {
-class MenuItem
+class MenuItem : public Item
 {
 public:
 	MenuItem(const std::string& name);
@@ -15,7 +16,7 @@ public:
 
 public:
 	void Render();
-	bool Pressed() const;
+	bool IsPressed() const;
 
 	void disable();
 	void enable();

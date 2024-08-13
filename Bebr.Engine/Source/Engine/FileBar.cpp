@@ -1,19 +1,23 @@
 #include "FileBar.hpp"
 #include <GUI/MenuBar.hpp>
+#include <GUI/Style.hpp>
 
 Bebr::Engine::FileBar::FileBar()
     : m_name    ("File")
     , m_save    ("Save", "Ctrl+S")
     , m_open    ("Open")
     , m_close   ("Close", "Alt+F4")
-{}
+{
+}
 
 void Bebr::Engine::FileBar::Render()
 {
     if (GUI::MenuBar::BeginMenu(m_name))
     {
+        GUI::Style::BeginDisabled();
         m_save.Render();
         m_open.Render();
+        GUI::Style::EndDisabled();
         m_close.Render();
         GUI::MenuBar::EndMenu();
     }

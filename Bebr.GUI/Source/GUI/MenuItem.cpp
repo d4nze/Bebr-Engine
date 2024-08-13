@@ -25,7 +25,7 @@ void Bebr::GUI::MenuItem::Render()
 	m_pressed = ImGui::MenuItem(m_name.c_str(), hotkeyStr, nullptr, m_enabled);
 }
 
-bool Bebr::GUI::MenuItem::Pressed() const
+bool Bebr::GUI::MenuItem::IsPressed() const
 {
 	return m_pressed;
 }

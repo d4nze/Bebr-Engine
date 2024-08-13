@@ -1,11 +1,16 @@
 #include "RenderComponent.hpp"
 
 Bebr::Core::RenderComponent::RenderComponent(Instance& instance, Scene& scene)
-    : SceneCarrier  (scene)
-    , m_instance    (instance)
+    : Component (instance, scene)
+    , m_priority(0)
 {}
 
-Bebr::Core::Instance& Bebr::Core::RenderComponent::GetInstance() const
+void Bebr::Core::RenderComponent::SetRenderPriority(std::int32_t priority)
 {
-    return m_instance;
+    m_priority = priority;
+}
+
+std::int32_t Bebr::Core::RenderComponent::GetRenderPriority() const
+{
+    return m_priority;
 }

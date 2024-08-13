@@ -15,3 +15,13 @@ void Bebr::GUI::Style::SetClassicTheme()
 {
 	ImGui::StyleColorsClassic();
 }
+
+void Bebr::GUI::Style::BeginDisabled(bool disabled)
+{
+	ImGui::BeginDisabled(disabled);
+}
+
+void Bebr::GUI::Style::EndDisabled()
+{
+	ImGui::EndDisabled();
+}

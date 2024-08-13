@@ -25,6 +25,10 @@ void Bebr::Engine::Application::Update()
 {
 	Bebr::Window::API::PollEvents();
 
+	if (m_mainMenuBar.GetFileBar().GetCloseItem().IsPressed())
+	{
+		m_window.Close();
+	}
 	if (m_sceneHierarchy.IsUpdated())
 	{
 		m_inspector.SetInspectable(m_sceneHierarchy.GetInspectable());

@@ -23,6 +23,8 @@ public:
 	void SetName(const std::string& name);
 	const std::string& GetName() const;
 
+	void SetLayer(const std::string& name);
+	void SetLayer(InstanceLayer& layer);
 	InstanceLayer& GetLayer() const;
 
 private:
