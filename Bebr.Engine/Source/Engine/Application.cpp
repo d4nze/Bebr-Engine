@@ -29,10 +29,16 @@ void Bebr::Engine::Application::Update()
 	{
 		m_window.Close();
 	}
+
 	if (m_sceneHierarchy.IsUpdated())
 	{
 		m_inspector.SetInspectable(m_sceneHierarchy.GetInspectable());
 	}
+
+	Bebr::Engine::WindowBar& windowBar = m_mainMenuBar.GetWindowBar();
+	windowBar.GetOpenSceneHierarchy().SetToggleMode(m_sceneHierarchy.IsOpen());
+	windowBar.GetOpenResourceFolder().SetToggleMode(m_resources.IsOpen());
+	windowBar.GetOpenInspector().SetToggleMode(m_inspector.IsOpen());
 }
 
 void Bebr::Engine::Application::Render()
@@ -52,7 +58,31 @@ void Bebr::Engine::Application::Render()
 void Bebr::Engine::Application::RenderGUI()
 {
 	m_mainMenuBar.Render();
-	m_sceneHierarchy.Render();
-	m_inspector.Render();
-	m_resources.Render();
+
+	Bebr::Engine::WindowBar& windowBar = m_mainMenuBar.GetWindowBar();
+	if (windowBar.GetOpenSceneHierarchy().IsToggled())
+	{
+		m_sceneHierarchy.Open();
+	}
+	if (windowBar.GetOpenResourceFolder().IsToggled())
+	{
+		m_resources.Open();
+	}
+	if (windowBar.GetOpenInspector().IsToggled())
+	{
+		m_inspector.Open();
+	}
+
+	if (m_sceneHierarchy.IsOpen())
+	{
+		m_sceneHierarchy.Render();
+	}
+	if (m_inspector.IsOpen())
+	{
+		m_inspector.Render();
+	}
+	if (m_resources.IsOpen())
+	{
+		m_resources.Render();
+	}
 }

@@ -2,7 +2,7 @@
 #include <GUI/TreeNode.hpp>
 
 Bebr::Engine::ResourcesFolder::ResourcesFolder()
-    : GUI::ClosableWindow   ("Resources Folder")
+    : GUI::ClosableWindow   ("Resources folder")
     , m_folderName          ("Resources")
     , m_updated             (false)
     , m_selected            (nullptr)

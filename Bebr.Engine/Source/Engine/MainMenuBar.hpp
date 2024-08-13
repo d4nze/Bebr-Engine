@@ -1,5 +1,6 @@
 #pragma once
 #include "FileBar.hpp"
+#include "WindowBar.hpp"
 
 namespace Bebr
 {
@@ -14,10 +15,12 @@ public:
 public:
 	void Render();
 
-	const FileBar& GetFileBar() const;
+	const FileBar&	GetFileBar() const;
+	WindowBar&		GetWindowBar();
 
 private:
-	FileBar m_fileBar;
+	FileBar		m_fileBar;
+	WindowBar	m_windowBar;
 };
 }
 }

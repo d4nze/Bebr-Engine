@@ -68,6 +68,8 @@ public:
 public:
     bool Begin();
 
+    void Close();
+    void Open();
     bool IsOpen() const;
 
 private:

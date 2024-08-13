@@ -47,6 +47,16 @@ bool Bebr::GUI::ClosableWindow::Begin()
     return ImGui::Begin(m_name.c_str(), &m_open, m_flags);
 }
 
+void Bebr::GUI::ClosableWindow::Close()
+{
+    m_open = false;
+}
+
+void Bebr::GUI::ClosableWindow::Open()
+{
+    m_open = true;
+}
+
 bool Bebr::GUI::ClosableWindow::IsOpen() const
 {
     return m_open;
